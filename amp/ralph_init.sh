@@ -1,26 +1,7 @@
 #!/bin/bash
 
-read -r -d '' PRD_SCHEMA <<'EOF'
-{
-    "project_meta": {
-        "name": "project_name",
-        "version": "version"
-    },
-    "backlog": [
-        {
-            "id": 1,
-            "feature": "feature_name",
-            "description": "detailed_description",
-            "acceptance_criteria": [
-                "criterion_1",
-                "criterion_2",
-                "criterion_n"
-            ],
-            "passes": false
-        }
-    ]
-}
-EOF
+# File Schemas
+PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"amp","amp_thread_id":"thread_id"},"backlog":[{"id":1,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1","criterion_2","criterion_n"],"passes":false}]}'
 
 read -r -d '' PROGRESS_SCHEMA <<'EOF'
 # Project Progress Log
@@ -46,19 +27,71 @@ read -r -d '' RULES_SCHEMA <<'EOF'
 - [convention_n]
 EOF
 
-# 1. Capture User Intent
-USER_REQUEST="$1"
-DRY_RUN=""
+# Global variables
+USER_REQUEST=""
+DRY_RUN=false
+AMP_COMMAND="amp --execute --dangerously-allow-all --mode smart --no-notifications --stream-json"
 
-# Check for --dry flag
-if [ "$1" = "--dry" ]; then
-    DRY_RUN="true"
-    USER_REQUEST="$2"
-    echo "🔍 DRY RUN MODE - Showing command without executing"
-    echo "--------------------------------"
-fi
+read -r -d '' JQ_STREAM_FILTER <<'JQ'
+# Extract first line from text
+def first_line: split("\n")[0];
+
+# Clean whitespace
+def clean: gsub("^[[:space:]]+|[[:space:]]+$";"");
+
+# Process different message types
+if .type == "system" then
+  "🔧 SYSTEM (" + .subtype + ")",
+  "cwd: " + .cwd,
+  "session: " + .session_id,
+  "tools available: " + (.tools | length | tostring),
+  "--------------------------------"
+
+elif .type == "user" then
+  (.message.content[0].text | clean | first_line) as $text |
+  if $text != "" then
+    "👤 USER (" + .message.role + ")",
+    $text,
+    "--------------------------------"
+  else empty end
+
+elif .type == "assistant" then
+  ([.message.content[] | 
+    if .type == "text" then .text | clean
+    elif .type == "tool_use" then "🧰 tool → " + .name
+    else empty end
+  ] | map(select(. != "")) | join("\n\n")) as $text |
+  if $text != "" then
+    "🤖 ASSISTANT",
+    $text,
+    "--------------------------------"
+  else empty end
+
+elif .type == "result" then
+  ([.content[] | select(.type == "text") | .text | clean] | 
+   map(select(. != "")) | join("\n\n")) as $text |
+  if $text != "" then
+    "📦 RESULT",
+    $text,
+    "--------------------------------"
+  else empty end
+
+else empty end
+JQ
+
+# Check dry run
+while [[ "$#" -gt 0 ]]; do
+  case $1 in
+    --dry-run|-d) DRY_RUN=true ;;
+    *)
+      USER_REQUEST="$1"
+      ;;
+  esac
+  shift
+done
 
 if [ -z "$USER_REQUEST" ]; then
+    [[ "$DRY_RUN" == true ]] && echo "🌵 DRY RUN MODE - Showing command without executing"
     echo "🤖 Ralph Initialization"
     echo "--------------------------------"
     echo "What do you want to do?" 
@@ -66,14 +99,14 @@ if [ -z "$USER_REQUEST" ]; then
     read -p "> " USER_REQUEST
 fi
 
-if [ -z "$DRY_RUN" ]; then
+if [[ "$DRY_RUN" == false ]]; then
     echo "🧠 delegating to AMP..."
 fi
 
 # 2. The Mega-Prompt
 # We construct one clear set of instructions for AMP to execute autonomously.
 PROMPT=$(cat <<EOF
-You are an initialization agent. Your goal is to prepare the environment for the "Ralph" autonomous loop.
+You are an initialization agent. Your goal is to prepare the environment for the "Ralph Wiggum" autonomous loop.
 
 **1. ANALYZE:** Scan the current directory to understand the existing file structure, tech stack, and project state.
 
@@ -120,14 +153,11 @@ EOF
 # We pipe the instructions to AMP. 
 # --dangerously-allow-all is REQUIRED so it can write files without asking "Permission to write?" 3 times.
 
-if [ -n "$DRY_RUN" ]; then
-    echo "🔍 Expanded command that would be executed:"
-    echo "--------------------------------"
-    echo "echo \"$PROMPT\" | amp --execute --dangerously-allow-all --mode smart --no-notifications"
+if [[ "$DRY_RUN" == true ]]; then
+    echo "\"$PROMPT\" | $AMP_COMMAND"
     echo "--------------------------------"
     echo "🔍 DRY RUN COMPLETE - No files were modified"
 else
-    echo "$PROMPT" | amp --execute --dangerously-allow-all --mode smart --no-notifications
-    echo "--------------------------------"
+    echo "$PROMPT" | $AMP_COMMAND | jq -r "$JQ_STREAM_FILTER"
     echo "✅ Initialization complete."
 fi
