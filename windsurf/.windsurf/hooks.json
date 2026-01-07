@@ -1,0 +1,10 @@
+{
+    "hooks": {
+        "pre_run_command": [
+            {
+                "command": "if [[ '${command}' == *'rm -rf'* ]]; then echo 'BLOCKED: Destructive command'; exit 2; fi",
+                "show_output": true
+            }
+        ]
+    }
+}
