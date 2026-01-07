@@ -8,6 +8,7 @@ DRY_RUN=false
 PRD_FILE="prd.json"
 PROGRESS_FILE="progress.txt"
 RULES_FILE="RULES.md"
+TREAD_ID_PRD=$(jq '.project_meta.amp_thread_id' "$PRD_FILE" | sed 's/"//g')
 THREAD_ID=""
 
 # The Command Template
@@ -15,7 +16,7 @@ AMP_COMMAND="amp --execute --dangerously-allow-all --mode smart --no-notificatio
 
 # Define the prompt content - always use full prompt for every iteration
 PROMPT_CONTENT=$(cat <<EOF
-Context: @$RULES_FILE @$PRD_FILE @$PROGRESS_FILE
+Context: @$RULES_FILE @$PRD_FILE @$PROGRESS_FILE @@$TREAD_ID_PRD
 
 **YOUR MISSION:**
 You are an autonomous coding agent adhering to the **Ralph Wiggum** workflow. Your goal is to incrementally implement features from a @$PRD_FILE backlog while maintaining a strictly clean working state.
