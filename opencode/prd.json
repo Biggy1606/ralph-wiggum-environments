@@ -1,0 +1,209 @@
+{
+  "project_meta": {
+    "name": "jellyfin-landing-page",
+    "version": "0.1.0",
+    "ralph_type": "opencode",
+    "opencode_session_id": null
+  },
+  "backlog": [
+    {
+      "id": 0,
+      "feature": "Migrate from npm to bun",
+      "description": "Replace npm as the package manager with bun for all project operations",
+      "acceptance_criteria": [
+        "Install bun if not present",
+        "Run bun install to generate bun.lockb",
+        "Update package.json scripts to use bun commands",
+        "Verify all dependencies work correctly with bun",
+        "Document bun-specific commands in README or RULES.md"
+      ],
+      "passes": false
+    },
+    {
+      "id": 1,
+      "feature": "Initialize AstroJS Project",
+      "description": "Set up a new AstroJS project with basic configuration",
+      "acceptance_criteria": [
+        "AstroJS project initialized with npm",
+        "package.json contains Astro dependencies",
+        "Basic project structure created (src/, public/)",
+        "astro.config.mjs configured"
+      ],
+      "passes": false
+    },
+    {
+      "id": 2,
+      "feature": "Configure Landing Page Layout",
+      "description": "Create the main layout structure for the landing page",
+      "acceptance_criteria": [
+        "Base layout component created (src/layouts/Layout.astro)",
+        "Navigation bar with logo and menu",
+        "Footer with Jellyfin branding and links",
+        "Responsive design implemented"
+      ],
+      "passes": false
+    },
+    {
+      "id": 3,
+      "feature": "Create Hero Section",
+      "description": "Build an engaging hero section with main value proposition",
+      "acceptance_criteria": [
+        "Hero section with headline and subheadline",
+        "Call-to-action buttons (Get Started, Learn More)",
+        "Background image or gradient",
+        "Responsive layout for mobile and desktop"
+      ],
+      "passes": false
+    },
+    {
+      "id": 4,
+      "feature": "Features Section",
+      "description": "Add a section highlighting Jellyfin's key features",
+      "acceptance_criteria": [
+        "Grid layout of feature cards",
+        "6-8 key features with icons",
+        "Feature descriptions",
+        "Hover effects on cards"
+      ],
+      "passes": false
+    },
+    {
+      "id": 5,
+      "feature": "Platform Support Section",
+      "description": "Show supported platforms and devices",
+      "acceptance_criteria": [
+        "Platform icons/cards (Windows, macOS, Linux, Android, iOS, web)",
+        "Platform compatibility information",
+        "Download buttons or links",
+        "Responsive grid layout"
+      ],
+      "passes": false
+    },
+    {
+      "id": 6,
+      "feature": "Media Gallery/Screenshots",
+      "description": "Add a visual gallery showing Jellyfin interface",
+      "acceptance_criteria": [
+        "Screenshot carousel or grid",
+        "At least 4-6 screenshots",
+        "Image captions",
+        "Responsive layout"
+      ],
+      "passes": false
+    },
+    {
+      "id": 7,
+      "feature": "Testimonials/Community Section",
+      "description": "Add user testimonials or community stats",
+      "acceptance_criteria": [
+        "Testimonial cards with user feedback",
+        "Community statistics (users, servers, etc.)",
+        "Star rating or satisfaction indicators",
+        "Balanced, professional layout"
+      ],
+      "passes": false
+    },
+    {
+      "id": 8,
+      "feature": "Get Started/Download Section",
+      "description": "Create download options and installation instructions",
+      "acceptance_criteria": [
+        "Download buttons for different platforms",
+        "Quick start guide preview",
+        "Link to full documentation",
+        "Version information display"
+      ],
+      "passes": false
+    },
+    {
+      "id": 9,
+      "feature": "Footer with Links",
+      "description": "Add comprehensive footer with navigation links",
+      "acceptance_criteria": [
+        "Jellyfin logo and tagline",
+        "Links to documentation, GitHub, Discord, forum",
+        "Social media icons",
+        "Copyright notice"
+      ],
+      "passes": false
+    },
+    {
+      "id": 10,
+      "feature": "Add Animations and Transitions",
+      "description": "Implement smooth animations and page transitions",
+      "acceptance_criteria": [
+        "Scroll reveal animations for sections",
+        "Hover effects on buttons and cards",
+        "Smooth scrolling navigation",
+        "Loading animations",
+        "Performance optimized (CSS transitions preferred)"
+      ],
+      "passes": false
+    },
+    {
+      "id": 11,
+      "feature": "Optimize for SEO",
+      "description": "Improve search engine optimization",
+      "acceptance_criteria": [
+        "Meta tags (title, description, keywords)",
+        "Open Graph tags for social sharing",
+        "Structured data (JSON-LD)",
+        "Sitemap generation",
+        "Robots.txt"
+      ],
+      "passes": false
+    },
+    {
+      "id": 12,
+      "feature": "Responsive Design Testing",
+      "description": "Ensure the landing page works on all screen sizes",
+      "acceptance_criteria": [
+        "Mobile view (< 768px) tested and working",
+        "Tablet view (768px - 1024px) tested and working",
+        "Desktop view (> 1024px) tested and working",
+        "Touch targets properly sized",
+        "Font sizes scale appropriately"
+      ],
+      "passes": false
+    },
+    {
+      "id": 13,
+      "feature": "Accessibility Improvements",
+      "description": "Ensure the landing page is accessible to all users",
+      "acceptance_criteria": [
+        "ARIA labels on interactive elements",
+        "Keyboard navigation support",
+        "Color contrast ratios meet WCAG AA standards",
+        "Alt text on all images",
+        "Skip to main content link"
+      ],
+      "passes": false
+    },
+    {
+      "id": 14,
+      "feature": "Performance Optimization",
+      "description": "Optimize the landing page for fast loading",
+      "acceptance_criteria": [
+        "Images optimized and lazy loaded",
+        "CSS minified in production build",
+        "JavaScript minified and tree-shaken",
+        "Font loading optimized",
+        "Lighthouse performance score > 90"
+      ],
+      "passes": false
+    },
+    {
+      "id": 15,
+      "feature": "Add Contact/Community Links",
+      "description": "Include ways to connect with the Jellyfin community",
+      "acceptance_criteria": [
+        "Discord invite link",
+        "GitHub repository link",
+        "Forum/community link",
+        "Social media links (Twitter, Mastodon, Reddit)",
+        "Newsletter signup (optional)"
+      ],
+      "passes": false
+    }
+  ]
+}

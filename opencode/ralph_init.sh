@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File Schemas
-PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"amp","amp_thread_id":"thread_id"},"backlog":[{"id":1,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1","criterion_2","criterion_n"],"passes":false}]}'
+PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"opencode","opencode_session_id":"session_id"},"backlog":[{"id":1,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1","criterion_2","criterion_n"],"passes":false}]}'
 
 read -r -d '' PROGRESS_SCHEMA <<'EOF'
 # Project Progress Log
@@ -30,54 +30,32 @@ EOF
 # Global variables
 USER_REQUEST=""
 DRY_RUN=false
-AMP_COMMAND="amp --execute --dangerously-allow-all --mode smart --no-notifications --stream-json"
+OPENCODE_MODEL="opencode/glm-4.7-free"
+OPENCODE_COMMAND="opencode run -m $OPENCODE_MODEL --format json"
 
-read -r -d '' JQ_STREAM_FILTER <<'JQ'
-# Extract first line from text
-def first_line: split("\n")[0];
-
-# Clean whitespace
-def clean: gsub("^[[:space:]]+|[[:space:]]+$";"");
-
-# Process different message types
-if .type == "system" then
-  "🔧 SYSTEM (" + .subtype + ")",
-  "cwd: " + .cwd,
-  "session: " + .session_id,
-  "tools available: " + (.tools | length | tostring),
-  "--------------------------------"
-
-elif .type == "user" then
-  (.message.content[0].text | clean | first_line) as $text |
-  if $text != "" then
-    "👤 USER (" + .message.role + ")",
-    $text,
-    "--------------------------------"
-  else empty end
-
-elif .type == "assistant" then
-  ([.message.content[] | 
-    if .type == "text" then .text | clean
-    elif .type == "tool_use" then "🧰 tool → " + .name
-    else empty end
-  ] | map(select(. != "")) | join("\n\n")) as $text |
-  if $text != "" then
+# JQ Filter for OpenCode JSON output formatting
+read -r -d '' JQ_OUTPUT_FILTER <<'JQ'
+if .type == "message" then
+  if .role == "assistant" then
     "🤖 ASSISTANT",
-    $text,
+    .content,
+    "--------------------------------"
+  elif .role == "user" then
+    "👤 USER",
+    .content,
     "--------------------------------"
   else empty end
-
-elif .type == "result" then
-  ([.content[] | select(.type == "text") | .text | clean] | 
-   map(select(. != "")) | join("\n\n")) as $text |
-  if $text != "" then
-    "📦 RESULT",
-    $text,
-    "--------------------------------"
-  else empty end
-
+elif .type == "tool" then
+  "🧰 TOOL → " + .name,
+  "--------------------------------"
+elif .type == "error" then
+  "❌ ERROR",
+  .message,
+  "--------------------------------"
 else empty end
 JQ
+
+# OpenCode outputs directly to terminal, no need for complex JQ filtering
 
 # Check dry run
 while [[ "$#" -gt 0 ]]; do
@@ -100,11 +78,11 @@ if [ -z "$USER_REQUEST" ]; then
 fi
 
 if [[ "$DRY_RUN" == false ]]; then
-    echo "🧠 delegating to AMP..."
+    echo "🧠 delegating to OpenCode..."
 fi
 
 # 2. The Mega-Prompt
-# We construct one clear set of instructions for AMP to execute autonomously.
+# We construct one clear set of instructions for OpenCode to execute autonomously.
 PROMPT=$(cat <<EOF
 You are an initialization agent. Your goal is to prepare the environment for the "Ralph Wiggum" autonomous loop.
 
@@ -150,14 +128,13 @@ EOF
 )
 
 # 3. Fire and Forget
-# We pipe the instructions to AMP. 
-# --dangerously-allow-all is REQUIRED so it can write files without asking "Permission to write?" 3 times.
+# We send the instructions to OpenCode in non-interactive mode.
 
 if [[ "$DRY_RUN" == true ]]; then
-    echo "\"$PROMPT\" | $AMP_COMMAND"
+    echo "$OPENCODE_COMMAND \"$PROMPT\""
     echo "--------------------------------"
     echo "🔍 DRY RUN COMPLETE - No files were modified"
 else
-    echo "$PROMPT" | $AMP_COMMAND | jq -r "$JQ_STREAM_FILTER"
+    $OPENCODE_COMMAND "$PROMPT" | jq -r "$JQ_OUTPUT_FILTER"
     echo "✅ Initialization complete."
 fi
