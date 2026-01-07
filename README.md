@@ -9,7 +9,7 @@ This repository contains "Ralph" harnesses for various AI code editors. The Ralp
 | Editor | Status | Link |
 | :--- | :--- | :--- |
 | **Windsurf** | Ready | [View Guide](./windsurf/README.md) |
-| **AMP** | Planned | [View Guide](./amp/README.md) |
+| **AMP** | Ready | [View Guide](./amp/README.md) |
 
 > Don't see your favorite tool?
 > I encourage you to contribute!
