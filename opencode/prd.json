@@ -1,0 +1,22 @@
+{
+    "project_meta": {
+        "name": "multiline_string_bash_tutorial",
+        "version": "1.0.0",
+        "ralph_type": "opencode",
+        "opencode_session_id": "session_id"
+    },
+    "backlog": [
+        {
+            "id": 1,
+            "feature": "create_multiline_string_bash_script",
+            "description": "Create a comprehensive bash script that teaches users how to handle multiline strings in shell scripting",
+            "acceptance_criteria": [
+                "Script demonstrates different methods for creating multiline strings (heredoc, quoted strings, etc.)",
+                "Script includes practical examples and use cases",
+                "Script is well-commented and educational",
+                "Script runs without errors when tested with bash -n"
+            ],
+            "passes": true
+        }
+    ]
+}

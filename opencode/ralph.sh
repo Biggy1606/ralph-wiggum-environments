@@ -10,7 +10,8 @@ PROGRESS_FILE="progress.txt"
 RULES_FILE="RULES.md"
 
 # The Command Template
-OPENCODE_MODEL='opencode/glm-4.7-free'
+# OPENCODE_MODEL='opencode/glm-4.7-free'
+OPENCODE_MODEL="opencode/big-pickle"
 OPENCODE_COMMAND="opencode run -m $OPENCODE_MODEL --format json"
 
 # Define the prompt content - always use full prompt for every iteration
@@ -67,13 +68,15 @@ if [ ! -f "$PROGRESS_FILE" ]; then
 	exit 1
 fi
 
+# Iteration Count
 if [[ $ITERATIONS == "auto" ]]; then
 	# Count number of tasks in prd.json
 	ITERATIONS=$(jq '[.backlog[] | select(.passes == false)] | length' "$PRD_FILE")
-	echo "Automatically detected $ITERATIONS tasks in $PRD_FILE"
+	echo -e "Automatically detected \033[32m$ITERATIONS\033[0m tasks in $PRD_FILE"
 fi
 
-echo "🚂 Starting Ralph Loop (max $ITERATIONS iterations)"
+echo -e "🚂 Starting Ralph Loop (max \033[32m$ITERATIONS\033[0m iterations)"
+echo -e "\t- Selected Model: \033[32m$OPENCODE_MODEL\033[0m"
 [[ "$DRY_RUN" == true ]] && echo "🌵 DRY RUN MODE ENABLED"
 
 all_tasks_complete() {
@@ -88,11 +91,11 @@ all_tasks_complete() {
 for ((i = 1; i <= $ITERATIONS; i++)); do
 
 	# Check if all tasks are complete before starting
-	all_tasks_complete()
+	all_tasks_complete;
 
-	echo "----------------------------------------"
-	echo "► Iteration $i / $ITERATIONS"
-	echo "----------------------------------------"
+	echo -e "----------------------------------------"
+	echo -e "- Iteration $i / $ITERATIONS"
+	echo -e "----------------------------------------"
 
 	if [ "$DRY_RUN" = true ]; then
 		# Only print informations if dry run is enabled
@@ -106,14 +109,14 @@ for ((i = 1; i <= $ITERATIONS; i++)); do
 	else
 		# Each iteration starts a fresh thread with full prompt
 		# Fork the stream: display live formatted output AND capture raw for processing
-		raw_output=$($OPENCODE_COMMAND "$PROMPT_CONTENT")
+		raw_output=$($OPENCODE_COMMAND "$PROMPT_CONTENT" | tee)
 
 		# Check for task completion in raw output
 		if [[ "$raw_output" == *"<promise>TASK_COMPLETE</promise>"* ]]; then
 			echo "✅ Task completed! Checking for more tasks..."
 
 			# Check if all tasks are now complete
-			all_tasks_complete()
+			all_tasks_complete;
 
 			echo "➡️  Moving to next task in new thread..."
 			sleep 2
@@ -130,4 +133,4 @@ for ((i = 1; i <= $ITERATIONS; i++)); do
 	sleep 1
 done
 
-echo "⚠️  Reached maximum iterations ($ITERATIONS). Some tasks may remain incomplete."
+echo -e "⚠️  Reached maximum iterations (\033[32m$ITERATIONS\033[0m). Some tasks may remain incomplete."

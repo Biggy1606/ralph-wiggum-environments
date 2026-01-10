@@ -18,6 +18,10 @@ This repository contains "Ralph" harnesses for various AI code editors. The Ralp
 
 Each environment has its own `README.md` file. Pick your favorite editor from the list above and follow the specific instructions in that folder.
 
+## 📝 My modifications
+
+- `ralph_init.sh` scripts that helps prepare the environment for the "Ralph Wiggum" autonomous loop.
+
 ## 🔄 The Ralph Loop Logic
 
 1. **Read** the `prd.json` (Requirements) and `progress.txt` (Memory).

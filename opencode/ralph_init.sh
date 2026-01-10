@@ -1,12 +1,14 @@
 #!/bin/bash
+# DEBUG FLAG
+# set -x
 
 # File Schemas
-PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"opencode","opencode_session_id":"session_id"},"backlog":[{"id":1,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1","criterion_2","criterion_n"],"passes":false}]}'
+PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"opencode","opencode_session_id":"session_id"},"backlog":[{"id":1,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1 + method of testing","criterion_2 + method of testing","criterion_n + method of testing"],"passes":false}]}'
 
 read -r -d '' PROGRESS_SCHEMA <<'EOF'
 # Project Progress Log
 
-##[phase] task_name
+## [phase] task_name
 
 * **Note:** notes_about_task
 * **Status:** status
@@ -30,32 +32,9 @@ EOF
 # Global variables
 USER_REQUEST=""
 DRY_RUN=false
-OPENCODE_MODEL="opencode/glm-4.7-free"
+# OPENCODE_MODEL="opencode/glm-4.7-free"
+OPENCODE_MODEL="opencode/big-pickle"
 OPENCODE_COMMAND="opencode run -m $OPENCODE_MODEL --format json"
-
-# JQ Filter for OpenCode JSON output formatting
-read -r -d '' JQ_OUTPUT_FILTER <<'JQ'
-if .type == "message" then
-  if .role == "assistant" then
-    "🤖 ASSISTANT",
-    .content,
-    "--------------------------------"
-  elif .role == "user" then
-    "👤 USER",
-    .content,
-    "--------------------------------"
-  else empty end
-elif .type == "tool" then
-  "🧰 TOOL → " + .name,
-  "--------------------------------"
-elif .type == "error" then
-  "❌ ERROR",
-  .message,
-  "--------------------------------"
-else empty end
-JQ
-
-# OpenCode outputs directly to terminal, no need for complex JQ filtering
 
 # Check dry run
 while [[ "$#" -gt 0 ]]; do
@@ -79,6 +58,7 @@ fi
 
 if [[ "$DRY_RUN" == false ]]; then
     echo "🧠 delegating to OpenCode..."
+	echo -e "- Selected Model:\033[32m $OPENCODE_MODEL\033[0m"
 fi
 
 # 2. The Mega-Prompt
@@ -135,6 +115,6 @@ if [[ "$DRY_RUN" == true ]]; then
     echo "--------------------------------"
     echo "🔍 DRY RUN COMPLETE - No files were modified"
 else
-    $OPENCODE_COMMAND "$PROMPT" | jq -r "$JQ_OUTPUT_FILTER"
+    $OPENCODE_COMMAND "$PROMPT" | tee
     echo "✅ Initialization complete."
 fi
