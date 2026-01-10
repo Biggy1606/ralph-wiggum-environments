@@ -1,147 +1,122 @@
 # Ralph Wiggum for OpenCode
 
-Autonomous coding agent workflow adapted for [OpenCode](https://opencode.ai/).
+Ralph Wiggum is an autonomous coding agent that incrementally implements features from a product requirements document (PRD) backlog while maintaining a strictly clean working state. It's designed to work seamlessly with OpenCode models.
 
-## Overview
+## Installation
 
-Ralph Wiggum is an autonomous coding workflow that:
-1. Initializes a project backlog from a user request
-2. Iteratively implements tasks one at a time
-3. Verifies each task before moving to the next
-4. Commits changes automatically with descriptive messages
+### Prerequisites
 
-This implementation uses **OpenCode CLI** (`opencode run`) for non-interactive execution.
+- OpenCode CLI installed
+- `jq` command-line JSON processor
+- Bash shell (Linux/macOS/WSL)
 
-## Prerequisites
+### Setup
 
-- [OpenCode CLI](https://opencode.ai/docs/cli/) installed and configured
-- `jq` for JSON processing
-- Git repository initialized
-
-## Files
-
-- **`ralph_init.sh`** - Initialize the Ralph environment and create task backlog
-- **`ralph.sh`** - Main autonomous loop that executes tasks
-- **`prd.json`** - Product Requirements Document with task backlog (auto-generated)
-- **`RULES.md`** - Tech stack and coding conventions (auto-generated)
-- **`progress.txt`** - Progress log (auto-generated)
+1. Clone or download this repository to your local machine
+2. Make the scripts executable:
+   ```bash
+   chmod +x ralph_init.sh ralph.sh
+   ```
+3. Verify installation by checking the scripts run without errors:
+   ```bash
+   ./ralph_init.sh --help
+   ```
 
 ## Usage
 
-### 1. Initialize
+### Getting Started
 
+1. **Initialize Ralph** for a new project or task:
+   ```bash
+   ./ralph_init.sh "Create a new React project"  # or any other task description
+   ```
+   
+   This will create the necessary configuration files:
+   - `prd.json` - Product requirements document with task backlog
+   - `RULES.md` - Tech stack and coding conventions
+   - `progress.txt` - Project progress log
+
+2. **Run Ralph** to execute tasks autonomously:
+   ```bash
+   ./ralph.sh                    # Auto-detects remaining tasks
+   ./ralph.sh 3                  # Run specific number of iterations
+   ./ralph.sh auto               # Auto mode (default)
+   ./ralph.sh --dry-run          # Preview without executing
+   ```
+
+### Workflow
+
+Ralph follows a 6-step workflow for each task:
+1. **Analyze**: Read RULES.md to understand tech stack and conventions
+2. **Select**: Find highest-priority task in prd.json that's not completed
+3. **Execute**: Implement the required code or fix
+4. **Verify**: Run tests or type-checks to ensure it works
+5. **Record**: Update prd.json (set "passes": true) and progress.txt
+6. **Commit**: Run `git commit --no-gpg-sign -am "Ralph: [Task Description]"`
+
+### Configuration
+
+The default model is set to `opencode/big-pickle` but can be changed in the scripts:
 ```bash
-./ralph_init.sh "Your project request here"
+# In ralph.sh and ralph_init.sh
+OPENCODE_MODEL="opencode/your-preferred-model"
 ```
 
-Or run interactively:
+## Development
 
-```bash
-./ralph_init.sh
+### Project Structure
+
+```
+.
+├── ralph_init.sh    # Initializes project and creates config files
+├── ralph.sh         # Main autonomous loop executor
+├── prd.json         # Product requirements document (created by init)
+├── RULES.md         # Tech stack and conventions (created by init)
+├── progress.txt     # Progress tracking log (created by init)
+└── README.md        # This documentation
 ```
 
-This will:
-- Analyze your project structure
-- Create `prd.json` with a task backlog
-- Create `RULES.md` with detected tech stack
-- Create `progress.txt` for tracking
+### Modifying Ralph
 
-### 2. Run the Loop
+- **Tech Stack Detection**: Edit the scanning logic in `ralph_init.sh` to support new languages/frameworks
+- **Workflow Customization**: Modify the prompt template in `ralph.sh` to change the autonomous workflow
+- **Model Configuration**: Change `OPENCODE_MODEL` variable in both scripts
 
-```bash
-./ralph.sh
-```
+### File Formats
 
-Options:
-- `./ralph.sh` - Auto-detect number of tasks and run all
-- `./ralph.sh 5` - Run exactly 5 iterations
-- `./ralph.sh --dry-run` - Preview without executing
-
-### 3. Monitor Progress
-
-Ralph will:
-- Pick the highest priority incomplete task
-- Implement the code
-- Run tests/verification
-- Update `prd.json` and `progress.txt`
-- Commit with message: `Ralph: [Task Description]`
-- Continue to next task
-
-## Key Differences from AMP Version
-
-| Feature | AMP | OpenCode |
-|---------|-----|----------|
-| Command | `amp --execute --stream-json` | `opencode run` |
-| Session tracking | `amp_thread_id` | `opencode_session_id` |
-| Output format | JSON stream with JQ filtering | Direct terminal output |
-| Context passing | Thread references `@@thread_id` | Session continuation `--session` |
-| Flags | `--dangerously-allow-all --mode smart` | Standard `opencode run` flags |
-
-## Configuration
-
-The scripts use these OpenCode CLI features:
-- `opencode run` - Non-interactive execution
-- `--session` - Continue previous session
-- `--format json` - JSON output for parsing (in ralph.sh)
-
-## PRD Schema
-
+**PRD Schema**:
 ```json
 {
-  "project_meta": {
-    "name": "project_name",
-    "version": "version",
-    "ralph_type": "opencode",
-    "opencode_session_id": "session_id"
-  },
-  "backlog": [
-    {
-      "id": 1,
-      "feature": "feature_name",
-      "description": "detailed_description",
-      "acceptance_criteria": ["criterion_1", "criterion_2"],
-      "passes": false
-    }
-  ]
+    "project_meta": {
+        "name": "project_name",
+        "version": "version",
+        "ralph_type": "opencode",
+        "opencode_session_id": "session_id"
+    },
+    "backlog": [
+        {
+            "group": "category",
+            "feature": "feature_name",
+            "description": "detailed_description",
+            "acceptance_criteria": ["criterion_1 + testing_method"],
+            "passes": false
+        }
+    ]
 }
 ```
 
-## Exit Conditions
+### Contributing
 
-Ralph looks for these signals in OpenCode output:
-- `<promise>TASK_COMPLETE</promise>` - Single task done, continue to next
-- `<promise>ALL_COMPLETE</promise>` - All tasks done, exit successfully
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test with various project types
+5. Submit a pull request
 
-## Troubleshooting
+### Debugging
 
-**OpenCode not found:**
-```bash
-# Install OpenCode
-curl -fsSL https://opencode.ai/install.sh | sh
-```
-
-**Authentication issues:**
-```bash
-# Configure API keys
-opencode auth login
-```
-
-**Session not continuing:**
-- Check that `opencode_session_id` is being captured correctly
-- Verify OpenCode session management with `opencode session list`
-
-**Tasks not being marked complete:**
-- Ensure OpenCode agent outputs the `<promise>` tags
-- Check `prd.json` is being updated correctly
-
-## Best Practices
-
-1. **Small tasks**: Break work into granular, testable units
-2. **Clear acceptance criteria**: Define what "done" means for each task
-3. **Monitor first run**: Use `--dry-run` to preview before executing
-4. **Review commits**: Ralph commits automatically - review git log regularly
-5. **Update RULES.md**: Keep tech stack documentation current
+Enable debug mode by uncommenting `set -x` at the top of either script to see detailed execution steps.
 
 ## License
 
-MIT
+This project is open source and available under the MIT License.

@@ -1,6 +1,0 @@
-# Project Progress Log
-
-## [initialization] create_multiline_string_bash_script
-
-* **Note:** User requested a bash script to learn how to deal with multiline strings
-* **Status:** completed

@@ -3,7 +3,7 @@
 # set -x
 
 # File Schemas
-PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"opencode","opencode_session_id":"session_id"},"backlog":[{"id":1,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1 + method of testing","criterion_2 + method of testing","criterion_n + method of testing"],"passes":false}]}'
+PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"opencode","opencode_session_id":"session_id"},"backlog":[{"group":<category group name>,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1 + method of testing","criterion_2 + method of testing","criterion_n + method of testing"],"passes":false}]}'
 
 read -r -d '' PROGRESS_SCHEMA <<'EOF'
 # Project Progress Log
@@ -18,12 +18,14 @@ read -r -d '' RULES_SCHEMA <<'EOF'
 # Tech Stack and Coding Conventions
 
 ## Tech Stack
+
 - Language: [detected_language]
 - Framework: [detected_framework] 
 - Package Manager: [detected_package_manager]
 - Testing: [detected_testing_library]
 
 ## Coding Conventions
+
 - [convention_1]
 - [convention_2]
 - [convention_n]
@@ -58,7 +60,7 @@ fi
 
 if [[ "$DRY_RUN" == false ]]; then
     echo "🧠 delegating to OpenCode..."
-	echo -e "- Selected Model:\033[32m $OPENCODE_MODEL\033[0m"
+	echo -e " └> Selected Model:\033[32m $OPENCODE_MODEL\033[0m"
 fi
 
 # 2. The Mega-Prompt

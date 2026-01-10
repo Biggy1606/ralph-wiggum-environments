@@ -53,18 +53,23 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # Sanity Check
+if ! command -v jq >/dev/null 2>&1; then
+	echo -e "\033[31m❌ jq is not installed. Please install jq to use Ralph.\033[0m"
+	exit 1
+fi
+
 if [ ! -f "$PRD_FILE" ]; then
-	echo "❌ Missing $PRD_FILE. Run ./ralph_init.sh first."
+	echo -e "\033[31m❌ Missing $PRD_FILE. Run ./ralph_init.sh first.\033[0m"
 	exit 1
 fi
 
 if [ ! -f "$RULES_FILE" ]; then
-	echo "❌ Missing $RULES_FILE. Run ./ralph_init.sh first."
+	echo -e "\033[31m❌ Missing $RULES_FILE. Run ./ralph_init.sh first.\033[0m"
 	exit 1
 fi
 
 if [ ! -f "$PROGRESS_FILE" ]; then
-	echo "❌ Missing $PROGRESS_FILE. Run ./ralph_init.sh first."
+	echo -e "\033[31m❌ Missing $PROGRESS_FILE. Run ./ralph_init.sh first.\033[0m"
 	exit 1
 fi
 
@@ -72,11 +77,11 @@ fi
 if [[ $ITERATIONS == "auto" ]]; then
 	# Count number of tasks in prd.json
 	ITERATIONS=$(jq '[.backlog[] | select(.passes == false)] | length' "$PRD_FILE")
-	echo -e "Automatically detected \033[32m$ITERATIONS\033[0m tasks in $PRD_FILE"
+	echo -e "Automatically detected \033[32m$ITERATIONS\033[0m non completed tasks in $PRD_FILE"
 fi
 
 echo -e "🚂 Starting Ralph Loop (max \033[32m$ITERATIONS\033[0m iterations)"
-echo -e "\t- Selected Model: \033[32m$OPENCODE_MODEL\033[0m"
+echo -e " └> Selected Model: \033[32m$OPENCODE_MODEL\033[0m"
 [[ "$DRY_RUN" == true ]] && echo "🌵 DRY RUN MODE ENABLED"
 
 all_tasks_complete() {
@@ -91,10 +96,10 @@ all_tasks_complete() {
 for ((i = 1; i <= $ITERATIONS; i++)); do
 
 	# Check if all tasks are complete before starting
-	all_tasks_complete;
+	all_tasks_complete
 
 	echo -e "----------------------------------------"
-	echo -e "- Iteration $i / $ITERATIONS"
+	echo -e "  - Iteration $i / $ITERATIONS"
 	echo -e "----------------------------------------"
 
 	if [ "$DRY_RUN" = true ]; then
@@ -108,7 +113,7 @@ for ((i = 1; i <= $ITERATIONS; i++)); do
 		exit 0
 	else
 		# Each iteration starts a fresh thread with full prompt
-		# Fork the stream: display live formatted output AND capture raw for processing
+		# Fork the stream: display live output AND capture raw for processing
 		raw_output=$($OPENCODE_COMMAND "$PROMPT_CONTENT" | tee)
 
 		# Check for task completion in raw output
@@ -116,7 +121,7 @@ for ((i = 1; i <= $ITERATIONS; i++)); do
 			echo "✅ Task completed! Checking for more tasks..."
 
 			# Check if all tasks are now complete
-			all_tasks_complete;
+			all_tasks_complete
 
 			echo "➡️  Moving to next task in new thread..."
 			sleep 2
