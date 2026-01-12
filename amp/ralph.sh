@@ -16,7 +16,7 @@ AMP_COMMAND="amp --execute --dangerously-allow-all --mode smart --no-notificatio
 # Define the prompt content - always use full prompt for every iteration
 PROMPT_CONTENT=$(
 	cat <<EOF
-Context: @$RULES_FILE @$PRD_FILE @$PROGRESS_FILE @@$TREAD_ID_PRD
+Context: @$RULES_FILE @$PRD_FILE @$PROGRESS_FILE
 
 **YOUR MISSION:**
 You are an autonomous coding agent adhering to the **Ralph Wiggum** workflow. Your goal is to incrementally implement features from a @$PRD_FILE backlog while maintaining a strictly clean working state.
@@ -88,7 +88,7 @@ all_tasks_complete() {
 for ((i = 1; i <= $ITERATIONS; i++)); do
 
 	# Check if all tasks are complete before starting
-	all_tasks_complete()
+	all_tasks_complete
 
 	echo "----------------------------------------"
 	echo "► Iteration $i / $ITERATIONS"
@@ -113,7 +113,7 @@ for ((i = 1; i <= $ITERATIONS; i++)); do
 			echo "✅ Task completed! Checking for more tasks..."
 
 			# Check if all tasks are now complete
-			all_tasks_complete()
+			all_tasks_complete
 
 			echo "➡️  Moving to next task in new thread..."
 			sleep 2

@@ -24,17 +24,18 @@ Each environment has its own `README.md` file. Pick your favorite editor from th
 
 ## 🔄 The Ralph Loop Logic
 
-1. **Read** the `prd.json` (Requirements) and `progress.txt` (Memory).
-2. **Execute** the highest priority incomplete task.
-3. **Verify** the code (test/typecheck).
-4. **Update** the `prd.json` (mark as pass) and `progress.txt` (log result).
-5. **Commit** changes to git.
-6. **Repeat** until `PROMISE_COMPLETE`.
+1. **Analyze** context (read RULES.md, prd.json, and progress log)
+2. **Select** highest priority incomplete task from prd.json
+3. **Execute** implementation for the selected task
+4. **Verify** with tests or typechecks (retry up to 3 times if needed)
+5. **Record** success in prd.json (mark task complete) and progress log
+6. **Commit** changes to git with descriptive message
+7. **Repeat** until all tasks complete or max iterations reached
 
 > [!NOTE]
 > I made this for my own use, but I think it's a good idea to share it with the community. PRs are welcome!
 
 ## 🤝 Credits
 
-* Inspired by [Matt Pocock's video](https://www.youtube.com/watch?v=_IK18goX4X8)
-* Based on the [Ralph workflow by Ghuntley](https://ghuntley.com/ralph/)
+- Inspired by [Matt Pocock's video](https://www.youtube.com/watch?v=_IK18goX4X8)
+- Based on the [Ralph workflow by Ghuntley](https://ghuntley.com/ralph/)
