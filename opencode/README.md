@@ -16,12 +16,14 @@ Ralph Wiggum is an autonomous coding agent that incrementally implements feature
 2. Make the scripts executable:
 
    ```bash
-   chmod +x ralph_init.sh ralph.sh
+   chmod +x ralph_init.sh ralph_deep_init.sh ralph.sh
    ```
 
 ## Usage
 
 ### Getting Started
+
+#### Standard Initialization
 
 1. **Initialize Ralph** for a new project or task:
 
@@ -34,7 +36,27 @@ Ralph Wiggum is an autonomous coding agent that incrementally implements feature
    - `RULES.md` - Tech stack and coding conventions
    - `progress.txt` - Project progress log
 
-2. **Run Ralph** to execute tasks autonomously:
+#### Deep Initialization (Large Projects)
+
+For complex projects that need comprehensive task breakdown:
+
+1. **Run Deep Init**:
+
+   ```bash
+   ./ralph_deep_init.sh "Build a full-stack e-commerce platform"
+   ./ralph_deep_init.sh --dry-run  # Preview without executing
+   ```
+
+   The **Architect-Builder** workflow:
+   - **Phase 1**: Creates 6 architectural groups (e.g., Auth, Database, API)
+   - **Phase 2**: Expands each group into 3-5 specific tasks via separate loops
+   - **Phase 3**: Merges all partial files into final `prd.json`
+
+   This approach prevents token overflow and generates larger, more comprehensive backlogs.
+
+#### Run Ralph
+
+1. **Execute tasks autonomously**:
 
    ```bash
    ./ralph.sh                    # Auto-detects remaining tasks
