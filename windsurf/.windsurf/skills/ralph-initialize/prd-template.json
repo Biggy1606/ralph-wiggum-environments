@@ -1,0 +1,31 @@
+{
+  "project_meta": {
+    "name": "<project_name>",
+    "version": "0.1.0",
+    "description": "<brief_description>"
+  },
+  "backlog": [
+    {
+      "id": 1,
+      "feature": "Setup basic project structure",
+      "description": "Initialize repository scaffolding with necessary files and directories",
+      "acceptance_criteria": [
+        "Repository structure is created",
+        "Basic configuration files are present",
+        "Project can be initialized without errors"
+      ],
+      "passes": false
+    },
+    {
+      "id": 2,
+      "feature": "<feature_name>",
+      "description": "<detailed_description>",
+      "acceptance_criteria": [
+        "<criterion_1>",
+        "<criterion_2>",
+        "<criterion_n>"
+      ],
+      "passes": false
+    }
+  ]
+}

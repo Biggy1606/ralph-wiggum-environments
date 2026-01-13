@@ -1,0 +1,17 @@
+{
+  "_comment": "This is a template showing the format for groups.json",
+  "_instructions": "Replace the group names with 6 functional groups appropriate for your project",
+  "groups_array": [
+    "Group1",
+    "Group2", 
+    "Group3",
+    "Group4",
+    "Group5",
+    "Group6"
+  ],
+  "_examples": {
+    "web_app": ["Auth", "Database", "API", "Frontend", "Testing", "DevOps"],
+    "cli_tool": ["Core-CLI", "Commands", "Config", "Output", "Testing", "Distribution"],
+    "api_service": ["Routes", "Database", "Auth", "Logic", "Testing", "Infrastructure"]
+  }
+}

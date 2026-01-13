@@ -1,0 +1,94 @@
+{
+  "examples": [
+    {
+      "group": "Authentication",
+      "feature": "User registration endpoint",
+      "description": "Create POST /api/auth/register endpoint that accepts email and password, validates input, hashes password, stores user in database, and returns JWT token",
+      "acceptance_criteria": [
+        "Endpoint accepts email and password",
+        "Email validation (format, uniqueness)",
+        "Password hashing with bcrypt",
+        "User stored in database",
+        "JWT token returned on success",
+        "Appropriate error responses for validation failures"
+      ],
+      "passes": false
+    },
+    {
+      "group": "Database",
+      "feature": "Initialize database schema",
+      "description": "Set up initial database schema with users, sessions, and audit_logs tables. Configure migrations and seed data for development",
+      "acceptance_criteria": [
+        "Users table with id, email, password_hash, created_at",
+        "Sessions table for JWT token management",
+        "Audit_logs table for security tracking",
+        "Migration scripts work on fresh database",
+        "Seed script creates test users",
+        "Database connection pool configured"
+      ],
+      "passes": false
+    },
+    {
+      "group": "Frontend",
+      "feature": "Login page component",
+      "description": "Create responsive login page with email/password form, validation, loading states, and error handling. Integrate with auth API",
+      "acceptance_criteria": [
+        "Form with email and password fields",
+        "Client-side validation",
+        "Loading spinner during API call",
+        "Error messages displayed for failed login",
+        "Successful login redirects to dashboard",
+        "Responsive design for mobile and desktop"
+      ],
+      "passes": false
+    },
+    {
+      "group": "Testing",
+      "feature": "Setup testing framework",
+      "description": "Configure Jest and React Testing Library for frontend tests, and pytest for backend. Create test utilities and sample tests",
+      "acceptance_criteria": [
+        "Jest configured with proper babel settings",
+        "React Testing Library installed",
+        "Pytest configured with test database",
+        "Test coverage reporting enabled",
+        "Sample unit test for one component",
+        "Sample integration test for one API endpoint"
+      ],
+      "passes": false
+    },
+    {
+      "group": "API",
+      "feature": "CRUD endpoints for users",
+      "description": "Implement GET, POST, PUT, DELETE endpoints for user management with proper authorization and validation",
+      "acceptance_criteria": [
+        "GET /api/users - list users (admin only)",
+        "GET /api/users/:id - get user details",
+        "PUT /api/users/:id - update user (own profile or admin)",
+        "DELETE /api/users/:id - delete user (admin only)",
+        "Role-based access control enforced",
+        "Input validation on all endpoints"
+      ],
+      "passes": false
+    },
+    {
+      "group": "DevOps",
+      "feature": "Docker containerization",
+      "description": "Create Dockerfile for application, docker-compose for local development with database, and document setup process",
+      "acceptance_criteria": [
+        "Dockerfile builds application successfully",
+        "docker-compose.yml includes app and database services",
+        "Environment variables configured properly",
+        "Volume mounts for local development",
+        "README with docker setup instructions",
+        "Application runs with 'docker-compose up'"
+      ],
+      "passes": false
+    }
+  ],
+  "notes": {
+    "feature_naming": "Use clear, action-oriented feature names",
+    "description_detail": "Descriptions should specify what, why, and how",
+    "acceptance_criteria": "Should be testable and specific, not vague",
+    "passes_default": "Always set to false initially"
+  }
+}
