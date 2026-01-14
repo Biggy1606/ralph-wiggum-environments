@@ -11,7 +11,7 @@
 # ------------------------------------------------------------------
 
 # File Schemas (Preserved from original)
-PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"opencode","opencode_session_id":"session_id"},"backlog":[]}'
+PRD_SCHEMA='{"project_meta":{"name":"$project_name","version":"$version","ralph_type":"opencode","opencode_session_id":"$session_id"},"backlog":[{"group":<category group name>,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1 + method of testing","criterion_2 + method of testing","criterion_n + method of testing"],"passes":false}]}'
 
 read -r -d '' PROGRESS_SCHEMA <<'EOF'
 # Project Progress Log
@@ -40,8 +40,18 @@ EOF
 USER_REQUEST=""
 DRY_RUN=false
 # OPENCODE_MODEL="opencode/big-pickle" # Change as needed
-OPENCODE_MODEL="opencode/glm-4.7-free"
+# OPENCODE_MODEL="opencode/glm-4.7-free"
+OPENCODE_MODEL="deepseek/deepseek-reasoner"
 OPENCODE_COMMAND="opencode run -m $OPENCODE_MODEL --format json"
+
+# Temp directory for intermediate files
+TEMP_DIR="ralph-init-temp"
+
+# Task generation config (optimized for larger projects)
+MIN_GROUPS=8
+MAX_GROUPS=12
+MIN_TASKS_PER_GROUP=5
+MAX_TASKS_PER_GROUP=10
 
 # ------------------------------------------------------------------
 # 2. HELPER FUNCTIONS
@@ -91,6 +101,9 @@ if [[ "$DRY_RUN" == false ]]; then
     echo "🧠 Delegating to OpenCode ($OPENCODE_MODEL)..."
 fi
 
+# Create temp directory
+mkdir -p "$TEMP_DIR"
+
 # ------------------------------------------------------------------
 # 4. PHASE 1: THE ARCHITECT (Drafting the Plan)
 # ------------------------------------------------------------------
@@ -110,11 +123,11 @@ Scan the directory. Understand the tech stack.
 **2. EXECUTE:**
 Perform the following file operations:
 
-* **init_progress.txt**:
+* **$TEMP_DIR/init_progress.txt**:
     * Create file.
     * Write text: "Phase 1: Architecture planned for '$USER_REQUEST'"
 
-* **progress.txt**:
+* **$TEMP_DIR/progress.txt**:
     * Create file using this template:
 \`\`\`
 $PROGRESS_SCHEMA
@@ -126,10 +139,11 @@ $PROGRESS_SCHEMA
 $RULES_SCHEMA
 \`\`\`
 
-* **groups.json**:
-    * Identify exactly 6 distinct, high-level "Functional Groups" or "Modules" needed for this project.
+* **$TEMP_DIR/groups.json**:
+    * Analyze the request thoroughly and identify $MIN_GROUPS to $MAX_GROUPS distinct "Functional Groups" or "Modules" needed.
+    * Include infrastructure, testing, deployment, and documentation groups if applicable.
     * Output a simple JSON ARRAY of strings.
-    * Example: ["Auth System", "Database Layer", "API Endpoints", "Frontend UI", "Testing", "Deployment"]
+    * Example: ["Infrastructure Setup", "Auth System", "Database Layer", "API Endpoints", "Frontend UI", "Testing", "Deployment", "Documentation"]
 
 **CONSTRAINT:**
 Do not generate the backlog yet. ONLY generate the files above.
@@ -145,20 +159,20 @@ run_opencode "$PHASE_1_PROMPT" | tee /dev/tty > /dev/null
 
 # Extract groups safely
 if [[ "$DRY_RUN" == false ]]; then
-    if [ ! -f "groups.json" ]; then
-        echo "❌ Critical Error: groups.json was not created. Aborting."
+    if [ ! -f "$TEMP_DIR/groups.json" ]; then
+        echo "❌ Critical Error: $TEMP_DIR/groups.json was not created. Aborting."
         exit 1
     fi
     # Read groups into a bash array (Plan-Locking)
-    mapfile -t TOPIC_GROUPS < <(jq -r '.[]' groups.json)
+    mapfile -t TOPIC_GROUPS < <(jq -r '.[]' "$TEMP_DIR/groups.json")
     
     echo "📋 Architecture Locked. Found ${#TOPIC_GROUPS[@]} groups."
 else
-    TOPIC_GROUPS=("Mock Group 1" "Mock Group 2" "Mock Group 3")
+    TOPIC_GROUPS=("Mock Group 1" "Mock Group 2" "Mock Group 3" "Mock Group 4")
 fi
 
 # Prepare for merging
-rm -f partial_tasks_*.json
+rm -f "$TEMP_DIR"/partial_tasks_*.json
 
 LOOP_IDX=1
 TOTAL_LOOPS=${#TOPIC_GROUPS[@]}
@@ -169,7 +183,7 @@ for GROUP in "${TOPIC_GROUPS[@]}"; do
     
     # Create a safe filename for the partial JSON
     SAFE_NAME=$(echo "$GROUP" | sed 's/[^a-zA-Z0-9]/_/g' | tr '[:upper:]' '[:lower:]')
-    PARTIAL_FILE="partial_tasks_${SAFE_NAME}.json"
+    PARTIAL_FILE="$TEMP_DIR/partial_tasks_${SAFE_NAME}.json"
 
     EXPAND_PROMPT=$(cat <<EOF
 You are a Technical Product Owner.
@@ -180,10 +194,12 @@ Your goal is to generate detailed backlog tasks for ONE specific group.
 - Current Group: "$GROUP"
 
 **Instruction:**
-1. Break the group "$GROUP" down into 3-5 specific, implementable coding tasks.
-2. Output **ONLY** a JSON Object containing the tasks in a "tasks" array.
-3. Do not include markdown code blocks. Just raw JSON.
-4. Save the output to **$PARTIAL_FILE**.
+1. Break the group "$GROUP" down into $MIN_TASKS_PER_GROUP-$MAX_TASKS_PER_GROUP specific, implementable coding tasks.
+2. Each task should be atomic, testable, and represent a single deliverable.
+3. Include detailed acceptance criteria with specific test methods.
+4. Output **ONLY** a JSON Object containing the tasks in a "tasks" array.
+5. Do not include markdown code blocks. Just raw JSON.
+6. Save the output to **$PARTIAL_FILE**.
 
 **Output Format for $PARTIAL_FILE:**
 {
@@ -200,7 +216,7 @@ Your goal is to generate detailed backlog tasks for ONE specific group.
 }
 
 **Update Log:**
-Append "Loop $LOOP_IDX: Generated tasks for $GROUP" to init_progress.txt.
+Append "Loop $LOOP_IDX: Generated tasks for $GROUP" to $TEMP_DIR/init_progress.txt.
 EOF
 )
 
@@ -223,27 +239,32 @@ if [[ "$DRY_RUN" == false ]]; then
     
     # 2. Merge all partial task arrays
     # We look for all files matching partial_tasks_*.json
-    if ls partial_tasks_*.json 1> /dev/null 2>&1; then
+    if ls "$TEMP_DIR"/partial_tasks_*.json 1> /dev/null 2>&1; then
         # Combine all .tasks arrays into one big list
-        ALL_TASKS=$(jq -s '[.[].tasks] | flatten' partial_tasks_*.json)
+        ALL_TASKS=$(jq -s '[.[].tasks] | flatten' "$TEMP_DIR"/partial_tasks_*.json)
         
         # Inject into prd.json
         # We use a temp file to ensure atomic write
-        jq --argjson tasks "$ALL_TASKS" '.backlog = $tasks' prd.json > prd.json.tmp && mv prd.json.tmp prd.json
+        jq --argjson tasks "$ALL_TASKS" '.backlog = $tasks' prd.json > "$TEMP_DIR/prd.json.tmp" && mv "$TEMP_DIR/prd.json.tmp" prd.json
         
-        echo "✅ Merged $(echo "$ALL_TASKS" | jq 'length') tasks into prd.json"
+        TASK_COUNT=$(echo "$ALL_TASKS" | jq 'length')
+        GROUP_COUNT=$(jq 'length' "$TEMP_DIR/groups.json")
+        echo "✅ Merged $TASK_COUNT tasks from $GROUP_COUNT groups into prd.json"
         
-        # Cleanup
-        rm partial_tasks_*.json groups.json
+        # Cleanup temp files but preserve temp dir for debugging
+        rm -f "$TEMP_DIR"/partial_tasks_*.json
+        # Keep groups.json for reference
+        mv "$TEMP_DIR/groups.json" "$TEMP_DIR/groups.json.bak" 2>/dev/null || true
     else
         echo "⚠️  Warning: No partial task files found. PRD is empty."
     fi
 else
-    echo "🔍 DRY RUN: Would merge partial_tasks_*.json into prd.json"
+    echo "🔍 DRY RUN: Would merge $TEMP_DIR/partial_tasks_*.json into prd.json"
 fi
 
 echo "--------------------------------"
 echo "🎉 Initialization Complete!"
 echo "   - View Backlog: prd.json"
 echo "   - View Rules: RULES.md"
-echo "   - View Log: init_progress.txt"
+echo "   - View Log: $TEMP_DIR/init_progress.txt"
+echo "   - Temp Files: $TEMP_DIR/"
