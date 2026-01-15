@@ -63,7 +63,7 @@ USER_REQUEST=""
 DRY_RUN=false
 # OPENCODE_MODEL="opencode/big-pickle" # Change as needed
 # OPENCODE_MODEL="opencode/glm-4.7-free"
-OPENCODE_MODEL="deepseek/deepseek-reasoner"
+OPENCODE_MODEL=${OPENCODE_MODEL:-"deepseek/deepseek-reasoner"}
 OPENCODE_COMMAND="opencode run -m $OPENCODE_MODEL --format json"
 
 # Temp directory for intermediate files

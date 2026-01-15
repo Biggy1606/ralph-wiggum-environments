@@ -61,7 +61,15 @@ For each task:
 
 Default model: `deepseek/deepseek-chat` (ralph.sh) or `deepseek/deepseek-reasoner` (ralph_init.sh, ralph_deep_init.sh)
 
-Change in scripts:
+**Override via environment variable:**
+
+```bash
+OPENCODE_MODEL="opencode/your-model" ./ralph.sh
+OPENCODE_MODEL="opencode/your-model" ./ralph_init.sh "Create a new React project"
+OPENCODE_MODEL="opencode/your-model" ./ralph_deep_init.sh "Build a full-stack e-commerce platform"
+```
+
+**Or change directly in scripts:**
 
 ```bash
 OPENCODE_MODEL="opencode/your-model"
