@@ -11,12 +11,14 @@ This directory contains Cascade Skills for the Ralph Wiggum Methodology - an inc
 **When to use:** Starting a new project or setting up Ralph for the first time
 
 **What it does:**
+
 - Creates `prd.json` backlog file
 - Creates `progress.md` tracking log
 - Sets up `.windsurf/rules/tech-stack.md` with your tech stack
 - Generates initial task backlog (typically 5-15 tasks)
 
 **Invocation:**
+
 ```
 @ralph-initialize
 ```
@@ -30,6 +32,7 @@ Or let Cascade auto-invoke by asking: "Initialize a new Ralph project for [descr
 **When to use:** Ready to implement the next feature from the backlog
 
 **What it does:**
+
 - Selects highest-priority failing task
 - Plans implementation approach
 - Implements the feature
@@ -37,6 +40,7 @@ Or let Cascade auto-invoke by asking: "Initialize a new Ralph project for [descr
 - Commits on success
 
 **Invocation:**
+
 ```
 @ralph-cycle
 ```
@@ -50,12 +54,14 @@ Or: "Run a Ralph development cycle"
 **When to use:** Complex projects needing large, well-organized backlogs (20-40+ tasks)
 
 **What it does:**
+
 - Identifies 6 functional architectural groups
 - Generates 3-5 tasks per group
 - Creates comprehensive `prd.json`
 - Organizes tasks by technical domain
 
 **Invocation:**
+
 ```
 @ralph-deep-init
 ```
@@ -89,15 +95,18 @@ Skills use progressive disclosure - Cascade reads the SKILL.md file first, then 
 Each skill includes reference files:
 
 **ralph-initialize:**
+
 - `prd-template.json` - Product requirements structure
 - `progress-template.md` - Progress log format
 - `tech-stack-template.md` - Tech stack documentation
 
 **ralph-cycle:**
+
 - `cycle-checklist.md` - Quick reference for each cycle
 - `verification-examples.md` - Test commands for various tech stacks
 
 **ralph-deep-init:**
+
 - `architecture-examples.md` - Sample functional group breakdowns
 - `task-examples.json` - Well-formed task examples
 - `groups-template.json` - Template for architecture groups
