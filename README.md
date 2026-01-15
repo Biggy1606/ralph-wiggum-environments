@@ -1,3 +1,6 @@
+> [!NOTE]
+> I am mainly focusing on the `opencode` environment since it's most useful for me right now.
+
 # 🚂 Ralph Wiggum Environments
 
 > *"I'm helping!"* — Ralph Wiggum
