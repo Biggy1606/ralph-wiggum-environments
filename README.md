@@ -11,6 +11,7 @@ This repository contains "Ralph" harnesses for various AI code editors. The Ralp
 
 | Editor | Status | Link |
 | :--- | :--- | :--- |
+| **OpenCode** | Ready | [View Guide](./opencode/README.md) |
 | **Windsurf** | Ready | [View Guide](./windsurf/README.md) |
 | **AMP** | Ready | [View Guide](./amp/README.md) |
 
