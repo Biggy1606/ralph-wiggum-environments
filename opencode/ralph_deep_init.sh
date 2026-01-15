@@ -11,7 +11,29 @@
 # ------------------------------------------------------------------
 
 # File Schemas (Preserved from original)
-PRD_SCHEMA='{"project_meta":{"name":"$project_name","version":"$version","ralph_type":"opencode","opencode_session_id":"$session_id"},"backlog":[{"group":<category group name>,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1 + method of testing","criterion_2 + method of testing","criterion_n + method of testing"],"passes":false}]}'
+read -r -d '' PRD_SCHEMA <<'EOF'
+{
+    "project_meta": {
+        "name": "$project_name",
+        "version": "$version",
+        "ralph_type": "opencode",
+        "opencode_session_id": "$session_id"
+    },
+    "backlog": [
+        {
+            "group": "$category_group_name",
+            "feature": "$feature_name",
+            "description": "$detailed_description",
+            "acceptance_criteria": [
+                "$criterion_1 ($method_of_testing)",
+                "$criterion_2 ($method_of_testing)",
+                "$criterion_n ($method_of_testing)"
+            ],
+            "passes": false
+        }
+    ]
+}
+EOF
 
 read -r -d '' PROGRESS_SCHEMA <<'EOF'
 # Project Progress Log
@@ -127,7 +149,7 @@ Perform the following file operations:
     * Create file.
     * Write text: "Phase 1: Architecture planned for '$USER_REQUEST'"
 
-* **$TEMP_DIR/progress.txt**:
+* **progress.txt**:
     * Create file using this template:
 \`\`\`
 $PROGRESS_SCHEMA
@@ -252,7 +274,7 @@ if [[ "$DRY_RUN" == false ]]; then
         echo "✅ Merged $TASK_COUNT tasks from $GROUP_COUNT groups into prd.json"
         
         # Cleanup temp files but preserve temp dir for debugging
-        rm -f "$TEMP_DIR"/partial_tasks_*.json
+        #rm -f "$TEMP_DIR"/partial_tasks_*.json
         # Keep groups.json for reference
         mv "$TEMP_DIR/groups.json" "$TEMP_DIR/groups.json.bak" 2>/dev/null || true
     else
