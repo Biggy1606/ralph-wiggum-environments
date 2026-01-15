@@ -11,7 +11,8 @@ RULES_FILE="RULES.md"
 
 # The Command Template
 # OPENCODE_MODEL='opencode/glm-4.7-free'
-OPENCODE_MODEL="opencode/big-pickle"
+# OPENCODE_MODEL="opencode/big-pickle"
+OPENCODE_MODEL="deepseek/deepseek-chat"
 OPENCODE_COMMAND="opencode run -m $OPENCODE_MODEL --format json"
 
 # Define the prompt content - always use full prompt for every iteration
