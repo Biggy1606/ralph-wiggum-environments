@@ -41,32 +41,33 @@ OPENCODE_COMMAND="opencode run -m $OPENCODE_MODEL --format json"
 
 # Check dry run
 while [[ "$#" -gt 0 ]]; do
-  case $1 in
-    --dry-run|-d) DRY_RUN=true ;;
-    *)
-      USER_REQUEST="$1"
-      ;;
-  esac
-  shift
+	case $1 in
+	--dry-run | -d) DRY_RUN=true ;;
+	*)
+		USER_REQUEST="$1"
+		;;
+	esac
+	shift
 done
 
 if [ -z "$USER_REQUEST" ]; then
-    [[ "$DRY_RUN" == true ]] && echo "🌵 DRY RUN MODE - Showing command without executing"
-    echo "🤖 Ralph Initialization"
-    echo "--------------------------------"
-    echo "What do you want to do?" 
-    echo "(e.g., 'Create a new React project', 'Fix the login bug', 'Refactor the API')"
-    read -p "> " USER_REQUEST
+	[[ "$DRY_RUN" == true ]] && echo "🌵 DRY RUN MODE - Showing command without executing"
+	echo "🤖 Ralph Initialization"
+	echo "--------------------------------"
+	echo "What do you want to do?"
+	echo "(e.g., 'Create a new React project', 'Fix the login bug', 'Refactor the API')"
+	read -p "> " USER_REQUEST
 fi
 
 if [[ "$DRY_RUN" == false ]]; then
-    echo "🧠 delegating to OpenCode..."
+	echo "🧠 delegating to OpenCode..."
 	echo -e " └> Selected Model:\033[32m $OPENCODE_MODEL\033[0m"
 fi
 
 # 2. The Mega-Prompt
 # We construct one clear set of instructions for OpenCode to execute autonomously.
-PROMPT=$(cat <<EOF
+PROMPT=$(
+	cat <<EOF
 You are an initialization agent. Your goal is to prepare the environment for the "Ralph Wiggum" autonomous loop.
 
 **1. ANALYZE:** Scan the current directory to understand the existing file structure, tech stack, and project state.
@@ -114,10 +115,10 @@ EOF
 # We send the instructions to OpenCode in non-interactive mode.
 
 if [[ "$DRY_RUN" == true ]]; then
-    echo "$OPENCODE_COMMAND \"$PROMPT\""
-    echo "--------------------------------"
-    echo "🔍 DRY RUN COMPLETE - No files were modified"
+	echo "$OPENCODE_COMMAND \"$PROMPT\""
+	echo "--------------------------------"
+	echo "🔍 DRY RUN COMPLETE - No files were modified"
 else
-    $OPENCODE_COMMAND "$PROMPT" | tee
-    echo "✅ Initialization complete."
+	$OPENCODE_COMMAND "$PROMPT" | tee
+	echo "✅ Initialization complete."
 fi
