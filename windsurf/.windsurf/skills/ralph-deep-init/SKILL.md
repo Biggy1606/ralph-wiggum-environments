@@ -53,21 +53,9 @@ For each of the 6 groups (iterate 1 through 6):
 2. **Generate Tasks:** Create 3-5 detailed implementation tasks for this group
 3. **Write to File:** Save to `partial_N.json`
 
-**Task Schema:**
+**Task Template:**
 
-```json
-{
-  "tasks": [
-    {
-      "group": "GroupName",
-      "feature": "Feature name",
-      "description": "Detailed description",
-      "acceptance_criteria": ["criterion 1", "criterion 2"],
-      "passes": false
-    }
-  ]
-}
-```
+Use `.windsurf/skills/ralph-deep-init/task-examples.json` as the reference schema for each `partial_N.json`.
 
 ### Phase 3: Assembly
 
