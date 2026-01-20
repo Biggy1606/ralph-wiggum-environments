@@ -34,7 +34,7 @@ Use ralph-deep-init instead of ralph-initialize when:
 
 2. **Create Foundation Files**
    - `progress.md` - Standard Ralph progress log
-   - `RULES.md` - Tech stack & conventions (or use existing `.windsurf/rules/tech-stack.md`)
+   - `.windsurf/rules/tech-stack.md` - Tech stack & conventions
    - `init_progress.txt` - Temporary initialization tracking
 
 3. **Generate Architecture**

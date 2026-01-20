@@ -1,29 +1,19 @@
 {
   "project_meta": {
-    "name": "<project_name>",
-    "version": "0.1.0",
-    "description": "<brief_description>"
+    "name": "project_name",
+    "version": "version",
+    "ralph_type": "opencode",
+    "opencode_session_id": "session_id"
   },
   "backlog": [
     {
-      "id": 1,
-      "feature": "Setup basic project structure",
-      "description": "Initialize repository scaffolding with necessary files and directories",
+      "group": "category_group_name",
+      "feature": "feature_name",
+      "description": "detailed_description",
       "acceptance_criteria": [
-        "Repository structure is created",
-        "Basic configuration files are present",
-        "Project can be initialized without errors"
-      ],
-      "passes": false
-    },
-    {
-      "id": 2,
-      "feature": "<feature_name>",
-      "description": "<detailed_description>",
-      "acceptance_criteria": [
-        "<criterion_1>",
-        "<criterion_2>",
-        "<criterion_n>"
+        "criterion_1 + method of testing",
+        "criterion_2 + method of testing",
+        "criterion_n + method of testing"
       ],
       "passes": false
     }

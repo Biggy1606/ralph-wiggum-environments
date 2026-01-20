@@ -19,7 +19,7 @@ This directory contains Cascade Skills for the Ralph Wiggum Methodology - an inc
 
 **Invocation:**
 
-```
+```text
 @ralph-initialize
 ```
 
@@ -41,7 +41,7 @@ Or let Cascade auto-invoke by asking: "Initialize a new Ralph project for [descr
 
 **Invocation:**
 
-```
+```text
 @ralph-cycle
 ```
 
@@ -62,7 +62,7 @@ Or: "Run a Ralph development cycle"
 
 **Invocation:**
 
-```
+```text
 @ralph-deep-init
 ```
 
@@ -82,7 +82,7 @@ Cascade automatically invokes skills when your request matches the skill descrip
 
 Use `@skill-name` to explicitly invoke a skill:
 
-```
+```text
 @ralph-cycle please implement the authentication task
 ```
 
@@ -137,14 +137,14 @@ Each skill includes reference files:
 
 ### Starting a new project
 
-```
+```text
 User: Initialize Ralph for a REST API with user authentication
 Cascade: [invokes @ralph-initialize automatically]
 ```
 
 ### Running development cycles
 
-```
+```text
 User: @ralph-cycle
 Cascade: I have selected "User registration endpoint" because...
 [implements, tests, commits]
@@ -152,7 +152,7 @@ Cascade: I have selected "User registration endpoint" because...
 
 ### Complex project initialization
 
-```
+```text
 User: Set up Ralph for a full-stack e-commerce platform with React and Node.js
 Cascade: [invokes @ralph-deep-init automatically]
 [Creates 6 architectural groups: Auth, Products, Cart, Payment, Admin, DevOps]
@@ -170,6 +170,19 @@ Cascade: [invokes @ralph-deep-init automatically]
 ## Customization
 
 You can customize the skills by editing the SKILL.md files or adding new supporting resources to each skill folder.
+
+## Windsurf File Structure (vs OpenCode)
+
+Windsurf stores configuration and automation files in specific locations:
+
+- **Rules:** `.windsurf/rules/*.md` (workspace) or `global_rules.md` (global)
+- **AGENTS.md:** place `AGENTS.md` or `agents.md` in any directory for scoped instructions
+- **Workflows:** `.windsurf/workflows/*.md`
+- **Hooks:** `.windsurf/hooks.json`
+- **Worktrees:** `~/.windsurf/worktrees/<repo_name>` (auto-managed)
+- **Memories:** managed in the Cascade UI (not stored as workspace files)
+
+OpenCode scripts use `RULES.md` and `progress.txt`, which are separate from Windsurf's conventions.
 
 ## Related Features
 

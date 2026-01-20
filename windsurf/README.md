@@ -1,55 +1,44 @@
 # Ralph Wiggum for Windsurf
 
-Set Cascade to `Code` mode, select AI model of your choice.
+This workspace provides a Ralph Wiggum environment for Windsurf/Cascade with skills, workflows, and rules.
 
-**Important:** Better model (more expensive) = better results.
+## Quick Start (Recommended)
 
-## Quick Start
+1. **Initialize**
+   - Run `@ralph-initialize` or ask: "Set up Ralph for my [project type]"
+2. **Develop**
+   - Run `@ralph-cycle` to implement one task at a time
+3. **Large Projects**
+   - Run `@ralph-deep-init` to generate a large, grouped backlog
 
-### Standard Initialization
+Skills auto-invoke when the request matches. See `.windsurf/skills/README.md` for full details.
 
-1. Run `/ralph-init` in Cascade chat
-    * Answer the questions, it will create `prd.json`, `progress.md` and populate `.windsurf/rules/tech-stack.md`
+## Workflow-Only Mode (Alternative)
 
-### Deep Initialization (Large Projects)
+1. Run `/ralph-init` to create:
+   - `prd.json`
+   - `progress.md`
+   - `.windsurf/rules/tech-stack.md`
+2. Run `/ralph-cycle` (single task) or `/ralph-batch` (multi-cycle)
+3. For deep initialization, run `/ralph-deep-init`
 
-1. Run `/ralph-deep-init` in Cascade chat
-    * Uses the **Architect-Builder** workflow
-    * Creates 6 architectural groups, then expands each into 3-5 tasks
-    * Generates larger `prd.json` files through isolated partial files
+## Core Files (Know These)
 
-### Run Ralph
+- **Backlog:** `prd.json`
+- **Backlog template:** `.windsurf/skills/ralph-initialize/prd-template.json`
+- **Progress log:** `progress.md`
+- **Progress template:** `.windsurf/skills/ralph-initialize/progress-template.md`
+- **Rules/stack:** `.windsurf/rules/tech-stack.md`
+- **Rules/stack template:** `.windsurf/skills/ralph-initialize/tech-stack-template.md`
+- **Agent policy:** `AGENTS.md`
 
-1. Execute the autonomous loop:
-    * Run `/ralph-batch` in Cascade (multi-cycle)
-    * Run `/ralph-cycle` in Cascade (single-cycle)
+## Where to Look
 
-## Using Skills (Recommended)
+- **Skills:** `.windsurf/skills/README.md`
+- **Workflows:** `.windsurf/workflows/`
+- **Rules:** `.windsurf/rules/`
 
-Skills provide intelligent, context-aware assistance with supporting resources:
+## Notes
 
-1. **Initialize:** `@ralph-initialize` or just ask "Set up Ralph for my [project type]"
-2. **Develop:** `@ralph-cycle` to implement tasks incrementally
-3. **Complex Projects:** `@ralph-deep-init` for large backlogs with architectural organization
-
-Skills automatically invoke when needed - just describe what you want to do.
-
-See `.windsurf/skills/README.md` for complete documentation.
-
-## Using Workflows (Alternative)
-
-1. Run `/ralph-init` in Cascade chat
-    * Answer the questions, it will create `prd.json`, `progress.md` and populate `.windsurf/rules/tech-stack.md`
-2. Run Ralph
-    A. Run `/ralph-batch` in Cascade (multi-cycle)
-    B. Run `/ralph-cycle` in Cascade (single-cycle)
-
-## Configuration
-
-* Configure `hooks.json` to add your own.
-
-## Known Issues
-
-* Often `.windsurf/rules/tech-stack.md` is not updated by `/ralph-init`. You may need to update it manually.
-* Sometimes Ralph requires user input to continue.
-* If you want Ralph to use web, use `@web` next to the command.
+- If the tech stack file is missing or outdated, update `.windsurf/rules/tech-stack.md` manually.
+- If you need web access, include `@web` in the request.

@@ -29,7 +29,7 @@ Read `prd.json` and `progress.md`. Analyze the backlog to determine the most log
 
 **Announce:** "I have selected [task name] because [reason]."
 
-**Constraint:** PICK ONLY ONE TASK AT A TIME!
+**Constraint:** PICK ONLY ONE TASK AT A TIME! Do not skip tasks unless blocked. If blocked, document the blocking reason in `progress.md`.
 
 ### Step 2: Planning & Journaling
 
@@ -40,17 +40,19 @@ Write a brief plan of execution in the log including:
 - What files will be modified/created
 - What approach you'll take
 - Any potential challenges
+- How you'll verify completion
 
 **Constraint:** Do not modify code yet.
 
 ### Step 3: Implementation
 
-Implement the feature described in the selected task.
+Implement the feature described in the selected task using the smallest change that satisfies the acceptance criteria.
 
 **Constraints:**
 
 - Work ONLY on this specific task
 - Do not refactor unrelated code
+- Modify only files required for the selected task
 - Adhere to the standards in `.windsurf/rules/tech-stack.md`
 - Follow the acceptance criteria from `prd.json`
 
@@ -58,7 +60,7 @@ Implement the feature described in the selected task.
 
 Execute the verification command (e.g., `npm test`, `pytest`, etc.) relevant to this task.
 
-Reference `.windsurf/rules/tech-stack.md` for the correct verification commands.
+Reference `.windsurf/rules/tech-stack.md` for the correct verification commands. If it does not list any, infer minimal verification and document it in `progress.md`.
 
 **Retry Logic:**
 
@@ -69,7 +71,7 @@ If the command fails:
 3. Re-run verification
 4. Repeat up to 3 times
 
-If it still fails after 3 tries, stop and ask the user for help.
+If it still fails after 3 tries, document the failure and next hypothesis in `progress.md`, then stop.
 
 ### Step 5: Completion & Commit
 
