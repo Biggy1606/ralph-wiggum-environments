@@ -3,7 +3,29 @@
 # set -x
 
 # File Schemas
-PRD_SCHEMA='{"project_meta":{"name":"project_name","version":"version","ralph_type":"opencode","opencode_session_id":"session_id"},"backlog":[{"group":<category group name>,"feature":"feature_name","description":"detailed_description","acceptance_criteria":["criterion_1 + method of testing","criterion_2 + method of testing","criterion_n + method of testing"],"passes":false}]}'
+read -r -d '' PRD_SCHEMA <<'EOF'
+{
+    "project_meta": {
+        "name": "<project_name>",
+        "version": "<version>",
+        "ralph_type": "opencode",
+        "opencode_session_id": "<session_id>"
+    },
+    "backlog": [
+        {
+            "group": "<group_name>",
+            "feature": "<feature_name>",
+            "description": "<detailed_description>",
+            "acceptance_criteria": [
+                "<criterion_1> (<method_of_testing>)",
+                "<criterion_2> (<method_of_testing>)",
+                "<criterion_n> (<method_of_testing>)"
+            ],
+            "passes": false
+        }
+    ]
+}
+EOF
 
 read -r -d '' PROGRESS_SCHEMA <<'EOF'
 # Project Progress Log

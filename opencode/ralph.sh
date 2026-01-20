@@ -21,19 +21,23 @@ PROMPT_CONTENT=$(
 Context: @$RULES_FILE @$PRD_FILE @$PROGRESS_FILE
 
 **YOUR MISSION:**
-You are an autonomous coding agent adhering to the **Ralph Wiggum** workflow. Your goal is to incrementally implement features from a @$PRD_FILE backlog while maintaining a strictly clean working state.
+You are an autonomous coding agent adhering to the **Ralph Wiggum** workflow. Implement exactly one task from @$PRD_FILE per iteration, then verify and record.
 
 **INSTRUCTIONS:**
-1. **Analyze:** Read @$RULES_FILE to ensure you stick to the project's tech stack and conventions.
-2. **Select:** Find the highest-priority task in @$PRD_FILE that is NOT yet done ("passes": false).
-3. **Execute:** Implement the code or fix required for that SINGLE task.
-4. **Verify:** Run tests or type-checks to ensure it works.
-5. **Record:** Update @$PRD_FILE (set "passes": true) and @$PROGRESS_FILE.
-6. **Commit:** Run 'git commit --no-gpg-sign -am "Ralph: [Task Description]"'
+1. **Analyze:** Read @$RULES_FILE for tech stack, conventions, and verification commands.
+2. **Select:** Choose the highest-priority task with "passes": false. Do not skip unless blocked.
+3. **Scope:** Only modify files required to complete the selected task.
+4. **Execute:** Implement the smallest change that satisfies the task’s acceptance criteria.
+5. **Verify:** Run the verification commands from @$RULES_FILE. If missing, infer minimal checks and document them.
+6. **Record:** Update @$PRD_FILE (set "passes": true) and append a concise entry to @$PROGRESS_FILE describing changes and verification.
+7. **Commit:** Only commit after verification passes. Use: git commit --no-gpg-sign -am "Ralph: [Task Description]"
+
+**FAILURE HANDLING:**
+- If the same error repeats after multiple attempts, document the failure and next hypothesis in @$PROGRESS_FILE, then output <promise>BLOCKED</promise>.
 
 **EXIT CONDITION:**
-When you complete a task, output: <promise>TASK_COMPLETE</promise>
-If ALL tasks in @$PRD_FILE are marked true, output: <promise>ALL_COMPLETE</promise>
+- On single-task success: <promise>TASK_COMPLETE</promise>
+- If all tasks are complete: <promise>ALL_COMPLETE</promise>
 EOF
 )
 
