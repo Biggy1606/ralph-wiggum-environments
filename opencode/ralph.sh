@@ -6,7 +6,7 @@
 ITERATIONS="auto"
 DRY_RUN=false
 PRD_FILE="prd.json"
-PROGRESS_FILE="progress.txt"
+PROGRESS_FILE="progress.md"
 RULES_FILE="RULES.md"
 
 # The Command Template
@@ -120,6 +120,12 @@ for ((i = 1; i <= $ITERATIONS; i++)); do
 		# Each iteration starts a fresh thread with full prompt
 		# Fork the stream: display live output AND capture raw for processing
 		raw_output=$($OPENCODE_COMMAND "$PROMPT_CONTENT" | tee)
+
+		# Check for blocked signal
+		if [[ "$raw_output" == *"<promise>BLOCKED</promise>"* ]]; then
+			echo "⛔ Ralph reported BLOCKED. Stopping loop."
+			exit 1
+		fi
 
 		# Check for task completion in raw output
 		if [[ "$raw_output" == *"<promise>TASK_COMPLETE</promise>"* ]]; then

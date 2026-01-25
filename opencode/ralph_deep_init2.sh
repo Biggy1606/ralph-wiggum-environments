@@ -21,33 +21,19 @@ OPENCODE_MODEL=${OPENCODE_MODEL:-"deepseek/deepseek-reasoner"}
 OPENCODE_COMMAND="opencode run -m $OPENCODE_MODEL --format json"
 
 # -----------------------------
-# SCHEMAS (LLM fills <placeholders>)
+# Templates
 # -----------------------------
-read -r -d '' PRD_SCHEMA <<'EOF'
-{
-  "project_meta": {
-    "name": "<project_name>",
-    "version": "<version>",
-    "ralph_type": "opencode",
-    "opencode_session_id": "<session_id>"
-  },
-  "backlog": []
-}
-EOF
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEMPLATE_DIR="$SCRIPT_DIR/templates"
 
-read -r -d '' RULES_SCHEMA <<'EOF'
-# Tech Stack and Coding Conventions
+if [[ ! -f "$TEMPLATE_DIR/prd-template.json" || ! -f "$TEMPLATE_DIR/progress-template.md" || ! -f "$TEMPLATE_DIR/rules-template.md" ]]; then
+	echo "❌ Missing templates in $TEMPLATE_DIR. Run from the opencode folder or restore templates." >&2
+	exit 1
+fi
 
-## Tech Stack
-- Language: <language>
-- Framework: <framework>
-- Package Manager: <package_manager>
-- Testing: <testing>
-
-## Coding Conventions
-- <convention_1>
-- <convention_2>
-EOF
+PRD_SCHEMA=$(cat "$TEMPLATE_DIR/prd-template.json")
+PROGRESS_SCHEMA=$(cat "$TEMPLATE_DIR/progress-template.md")
+RULES_SCHEMA=$(cat "$TEMPLATE_DIR/rules-template.md")
 
 # -----------------------------
 # HELPERS
@@ -110,6 +96,11 @@ log "Init started for: $USER_REQUEST"
 
 log "Phase 1: Architecture analysis"
 
+if [[ ! -f "progress.md" ]]; then
+	echo "$PROGRESS_SCHEMA" >progress.md
+	log "Created progress.md"
+fi
+
 PHASE_1_PROMPT=$(
 	cat <<EOF
 Analyze the project request:
@@ -148,14 +139,25 @@ GROUP_COUNT=$(jq 'length' "$TEMP_DIR/groups.json")
 log "Architecture locked with $GROUP_COUNT groups"
 
 # Write RULES.md (shell owns file I/O)
-jq -r '
-  "# Tech Stack and Coding Conventions\n\n## Tech Stack\n" +
-  "- Language: " + .tech_stack.language + "\n" +
-  "- Framework: " + .tech_stack.framework + "\n" +
-  "- Package Manager: " + .tech_stack.package_manager + "\n" +
-  "- Testing: " + .tech_stack.testing + "\n\n" +
-  "## Coding Conventions\n- TBD\n"
-' "$TEMP_DIR/phase1.json" >RULES.md
+# Read values from JSON
+LANG=$(jq -r '.tech_stack.language' "$TEMP_DIR/phase1.json")
+FRAMEWORK=$(jq -r '.tech_stack.framework' "$TEMP_DIR/phase1.json")
+PKG_MGR=$(jq -r '.tech_stack.package_manager' "$TEMP_DIR/phase1.json")
+TESTING=$(jq -r '.tech_stack.testing' "$TEMP_DIR/phase1.json")
+
+# Replace placeholders in template
+RULES_CONTENT="$RULES_SCHEMA"
+RULES_CONTENT="${RULES_CONTENT//\[detected_language\]/$LANG}"
+RULES_CONTENT="${RULES_CONTENT//\[detected_framework\]/$FRAMEWORK}"
+RULES_CONTENT="${RULES_CONTENT//\[detected_package_manager\]/$PKG_MGR}"
+RULES_CONTENT="${RULES_CONTENT//\[detected_testing_library\]/$TESTING}"
+
+# Handle conventions (default to TBD for now as they aren't in phase1.json)
+RULES_CONTENT="${RULES_CONTENT//\[convention_1\]/TBD}"
+RULES_CONTENT="${RULES_CONTENT//- \[convention_2\]/}"
+RULES_CONTENT="${RULES_CONTENT//- \[convention_n\]/}"
+
+echo "$RULES_CONTENT" >RULES.md
 
 # ==============================================================
 # PHASE 2 – BUILDERS

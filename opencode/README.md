@@ -36,7 +36,7 @@ Both scripts accept `--dry-run` flag to preview without executing.
 
 - `prd.json` - Task backlog
 - `RULES.md` - Tech stack and conventions
-- `progress.txt` - Progress log
+- `progress.md` - Progress log
 
 ### Run Ralph
 
@@ -54,8 +54,16 @@ For each task:
 2. **Select**: Pick highest-priority uncompleted task
 3. **Execute**: Implement the task
 4. **Verify**: Run tests/type-checks
-5. **Record**: Update prd.json and progress.txt
+5. **Record**: Update prd.json and progress.md
 6. **Commit**: `git commit --no-gpg-sign -am "Ralph: [Task]"`
+
+### Templates
+
+Template files live in `opencode/templates/`:
+
+- `prd-template.json`
+- `rules-template.md`
+- `progress-template.md`
 
 ## Configuration
 

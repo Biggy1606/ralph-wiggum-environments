@@ -3,55 +3,17 @@
 # set -x
 
 # File Schemas
-read -r -d '' PRD_SCHEMA <<'EOF'
-{
-    "project_meta": {
-        "name": "<project_name>",
-        "version": "<version>",
-        "ralph_type": "opencode",
-        "opencode_session_id": "<session_id>"
-    },
-    "backlog": [
-        {
-            "group": "<group_name>",
-            "feature": "<feature_name>",
-            "description": "<detailed_description>",
-            "acceptance_criteria": [
-                "<criterion_1> (<method_of_testing>)",
-                "<criterion_2> (<method_of_testing>)",
-                "<criterion_n> (<method_of_testing>)"
-            ],
-            "passes": false
-        }
-    ]
-}
-EOF
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEMPLATE_DIR="$SCRIPT_DIR/templates"
 
-read -r -d '' PROGRESS_SCHEMA <<'EOF'
-# Project Progress Log
+if [[ ! -f "$TEMPLATE_DIR/prd-template.json" || ! -f "$TEMPLATE_DIR/progress-template.md" || ! -f "$TEMPLATE_DIR/rules-template.md" ]]; then
+	echo "❌ Missing templates in $TEMPLATE_DIR. Run from the opencode folder or restore templates." >&2
+	exit 1
+fi
 
-## [phase] task_name
-
-* **Note:** notes_about_task
-* **Status:** status
-EOF
-
-read -r -d '' RULES_SCHEMA <<'EOF'
-# Tech Stack and Coding Conventions
-
-## Tech Stack
-
-- Language: [detected_language]
-- Framework: [detected_framework] 
-- Package Manager: [detected_package_manager]
-- Testing: [detected_testing_library]
-
-## Coding Conventions
-
-- [convention_1]
-- [convention_2]
-- [convention_n]
-EOF
+PRD_SCHEMA=$(cat "$TEMPLATE_DIR/prd-template.json")
+PROGRESS_SCHEMA=$(cat "$TEMPLATE_DIR/progress-template.md")
+RULES_SCHEMA=$(cat "$TEMPLATE_DIR/rules-template.md")
 
 # Global variables
 USER_REQUEST=""
@@ -99,7 +61,7 @@ Based on your scan and the user's request: "$USER_REQUEST"
 
 Perform the following file operations (use your file creation/editing tools):
 
-* **progress.txt**:
+* **progress.md**:
     * Create file if missing
     * Append new entry with current timestamp
     * Include: phase, task_name, notes, and status
@@ -108,7 +70,7 @@ Perform the following file operations (use your file creation/editing tools):
     $PROGRESS_SCHEMA
 \`\`\`
 
-* **RULES.md**: 
+* **RULES.md**:
     * Check if file exists
     * If MISSING: Create file with detected tech stack and coding conventions
     * If EXISTS: Do not modify
