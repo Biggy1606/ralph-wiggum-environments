@@ -62,11 +62,10 @@ Use `.windsurf/skills/ralph-deep-init/task-examples.json` as the reference schem
 **Goal:** Compile the final Product Requirements Document.
 
 1. **Create PRD**
-   - Create `prd.json`
+   - Create `prd.json` (use `.windsurf/skills/ralph-initialize/prd-template.json` as reference)
    - Read all `partial_*.json` files
    - Merge all `tasks` arrays into the `backlog` field
    - Ensure valid JSON structure
-   - Add sequential `id` numbers to all tasks
 
 2. **Cleanup**
    - Delete `groups.json`

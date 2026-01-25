@@ -1,0 +1,21 @@
+{
+    "project_meta": {
+        "name": "<project_name>",
+        "version": "<version>",
+        "ralph_type": "opencode",
+        "opencode_session_id": "<session_id>"
+    },
+    "backlog": [
+        {
+            "group": "<group_name>",
+            "feature": "<feature_name>",
+            "description": "<detailed_description>",
+            "acceptance_criteria": [
+                "<criterion_1> (<method_of_testing>)",
+                "<criterion_2> (<method_of_testing>)",
+                "<criterion_n> (<method_of_testing>)"
+            ],
+            "passes": false
+        }
+    ]
+}

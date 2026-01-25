@@ -46,11 +46,11 @@ Analyze the user's project description. Break the project down into small, atomi
 
 ## Output Files
 
-Reference the templates in this skill folder:
+Use these template files from this skill folder:
 
-- `prd-template.json` - Product Requirements Document structure
-- `progress-template.md` - Progress log format
-- `tech-stack-template.md` - Tech stack documentation format
+- `.windsurf/skills/ralph-initialize/prd-template.json` - Product Requirements Document structure
+- `.windsurf/skills/ralph-initialize/progress-template.md` - Progress log format
+- `.windsurf/skills/ralph-initialize/tech-stack-template.md` - Tech stack documentation format
 
 ## Success Criteria
 

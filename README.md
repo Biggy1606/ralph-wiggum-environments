@@ -60,3 +60,8 @@ For complex projects where generating a full backlog in a single pass would hit 
 
 - Inspired by [Matt Pocock's video](https://www.youtube.com/watch?v=_IK18goX4X8)
 - Based on the [Ralph workflow by Ghuntley](https://ghuntley.com/ralph/)
+
+### yes
+
+Reddit post where I shared this: <https://www.reddit.com/r/windsurf/comments/1q6y2jz/ralph_wiggum_agent_for_windsurf>
+
