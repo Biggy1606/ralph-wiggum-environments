@@ -65,6 +65,30 @@ Template files live in `opencode/templates/`:
 - `rules-template.md`
 - `progress-template.md`
 
+## Native Agent Integration
+
+You can also use Ralph as a native OpenCode agent, which allows for deeper integration and more interactive workflows.
+
+### Installation
+
+Copy the agent definitions to your project's `.opencode/agents/` directory:
+
+```bash
+mkdir -p .opencode/agents
+cp opencode/agents/*.md .opencode/agents/
+```
+
+### Usage
+
+1.  **Initialize**:
+    *   Invoke `@ralph-init` in chat: `@ralph-init "Create a new React project"`
+    *   Or continue using the scripts (`./ralph_init.sh`) as they are compatible.
+
+2.  **Run Tasks**:
+    *   Switch to the Ralph agent using the Agent Selector (Tab) or by selecting `ralph`.
+    *   Simply ask: "Do the next task" or "Complete the backlog".
+    *   Ralph will read the files, pick a task, execute, verify, and commit, just like the script.
+
 ## Configuration
 
 Default model: `deepseek/deepseek-chat` (ralph.sh) or `deepseek/deepseek-reasoner` (ralph_init.sh, ralph_deep_init.sh)
