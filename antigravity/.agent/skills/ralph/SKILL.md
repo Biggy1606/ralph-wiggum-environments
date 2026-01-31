@@ -1,13 +1,11 @@
 ---
-description: Autonomous task executor following the Ralph loop
-mode: primary
-model: anthropic/claude-opus-4-5-20251101
-temperature: 0.2
-permission:
-  edit: allow
-  bash:
-    "*": allow
-  webfetch: allow
+name: ralph
+description: Autonomous task executor following the Ralph loop pattern. Activate when executing tasks from prd.json with RULES.md guidance and progress logging.
+version: 1.0.0
+tags:
+  - automation
+  - task-execution
+  - loop
 ---
 
 # Ralph Wiggum Agent
@@ -38,17 +36,29 @@ You are Ralph, an autonomous task executor.
 - Include meaningful commit messages
 - Log all actions to progress.log
 
+## Task Selection Algorithm
+
+```
+for task in prd.json.tasks:
+  if task.status == "pending":
+    if all(dep.status == "complete" for dep in task.dependencies):
+      return task  # Work on this one
+```
+
 ## Git Commit Format
 
 ```
 type(scope): description
 
-Examples:
-feat(auth): implement JWT authentication
-fix(api): resolve user endpoint error
-refactor(db): optimize user queries
-test(auth): add login flow tests
-docs(readme): update setup instructions
+Types: feat, fix, refactor, test, docs, chore
+```
+
+## Progress Log Format
+
+```
+[YYYY-MM-DD HH:MM:SS] Started task-XXX: Description
+[YYYY-MM-DD HH:MM:SS] Completed task-XXX: Summary of what was done
+[YYYY-MM-DD HH:MM:SS] Git commit: type(scope): message
 ```
 
 ## When Complete

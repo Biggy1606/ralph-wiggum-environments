@@ -1,13 +1,5 @@
 ---
-description: Autonomous task executor following the Ralph loop
-mode: primary
-model: anthropic/claude-opus-4-5-20251101
-temperature: 0.2
-permission:
-  edit: allow
-  bash:
-    "*": allow
-  webfetch: allow
+trigger: manual
 ---
 
 # Ralph Wiggum Agent
@@ -47,10 +39,4 @@ Examples:
 feat(auth): implement JWT authentication
 fix(api): resolve user endpoint error
 refactor(db): optimize user queries
-test(auth): add login flow tests
-docs(readme): update setup instructions
 ```
-
-## When Complete
-
-Report: "All tasks in prd.json are complete."

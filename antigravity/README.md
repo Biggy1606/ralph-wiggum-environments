@@ -1,17 +1,18 @@
-# OpenCode Ralph Environment
+# Antigravity Ralph Environment
 
 > *"I'm helping!"* — Ralph Wiggum
 
-This directory contains the Ralph Wiggum agent preset for **OpenCode**.
+This directory contains the Ralph Wiggum agent preset for **Antigravity (Google)**.
 
 ## 📁 Structure
 
 ```
-opencode/
-└── .opencode/
-    ├── agents/
-    │   └── ralph.md           # Ralph agent definition
-    └── commands/
+antigravity/
+└── .agent/
+    ├── skills/
+    │   └── ralph/
+    │       └── SKILL.md       # Ralph skill definition
+    └── workflows/
         ├── ralph-init.md      # Initialize Ralph environment
         ├── ralph-loop.md      # Execute autonomous loop
         └── ralph-deep-init.md # Deep init for large projects
@@ -19,25 +20,26 @@ opencode/
 
 ## 🚀 Installation
 
-Copy the `.opencode/` directory to your project root:
+Copy the `.agent/` directory to your project root:
 
 ```bash
-cp -r .opencode/ /path/to/your/project/
+cp -r .agent/ /path/to/your/project/
 ```
 
-Or for global availability across all projects:
-
+For global availability:
 ```bash
-cp -r .opencode/agents/* ~/.config/opencode/agents/
-cp -r .opencode/commands/* ~/.config/opencode/commands/
+cp -r .agent/skills/* ~/.gemini/skills/
+cp -r .agent/workflows/* ~/.gemini/antigravity/global_workflows/
 ```
+
+> **Note:** Antigravity discovers skills/workflows from workspace root and walks up the directory tree.
 
 ## 📖 Usage
 
 ### Initialize Ralph
 
-```bash
-opencode
+In chat:
+```
 /ralph-init "Build a user authentication system with JWT"
 ```
 
@@ -48,7 +50,7 @@ This creates:
 
 ### Run the Loop
 
-```bash
+```
 /ralph-loop
 ```
 
@@ -65,15 +67,15 @@ Ralph will autonomously:
 
 For complex projects that would exceed token limits:
 
-```bash
+```
 /ralph-deep-init "Build complete e-commerce platform with payment processing"
 ```
 
-## 🔧 Configuration
+## 🔧 Skill Metadata
 
-The agent is configured with:
-- **Model:** `anthropic/claude-opus-4-5-20251101`
-- **Temperature:** `0.2` (consistent outputs)
-- **Permissions:** Edit, Bash, Web Fetch enabled
+The skill includes:
+- **Name:** `ralph`
+- **Version:** `1.0.0`
+- **Tags:** `automation`, `task-execution`, `loop`
 
-Modify `.opencode/agents/ralph.md` to customize.
+Modify `.agent/skills/ralph/SKILL.md` to customize.

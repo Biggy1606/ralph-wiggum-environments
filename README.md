@@ -1,6 +1,3 @@
-> [!NOTE]
-> I am mainly focusing on the `opencode` environment since it's most useful for me right now.
-
 # 🚂 Ralph Wiggum Environments
 
 > *"I'm helping!"* — Ralph Wiggum
@@ -11,9 +8,10 @@ This repository contains "Ralph" harnesses for various AI code editors. The Ralp
 
 | Editor | Status | Link |
 | :--- | :--- | :--- |
-| **OpenCode** | Ready | [View Guide](./opencode/README.md) |
-| **Windsurf** | Ready | [View Guide](./windsurf/README.md) |
-| **AMP** | Ready | [View Guide](./amp/README.md) |
+| **OpenCode** | ✅ Ready | [View Guide](./opencode/README.md) |
+| **Windsurf** | ✅ Ready | [View Guide](./windsurf/README.md) |
+| **AMP** | ✅ Ready | [View Guide](./amp/README.md) |
+| **Antigravity** | ✅ Ready | [View Guide](./antigravity/README.md) |
 
 > Don't see your favorite tool?
 > I encourage you to contribute!
@@ -25,9 +23,9 @@ Each environment has its own `README.md` file. Pick your favorite editor from th
 ## 📝 My modifications
 
 - `ralph_init.sh` scripts that helps prepare the environment for the "Ralph Wiggum" autonomous loop.
-- `ralph_deep_init.sh` scripts that helps prepare the environment for the "Ralph Wiggum" autonomous loop.
+- `ralph_deep_init.sh` scripts that helps prepare the environment for the "Ralph Wiggum" autonomous loop in huge projects.
 
-## 🏗️ Deep Initialization (Large Projects)
+## 🏗️ Deep Initialization (ralph_deep_init)
 
 For complex projects where generating a full backlog in a single pass would hit LLM token limits (truncating `prd.json`), use the **Deep Init** scripts.
 
@@ -36,12 +34,6 @@ For complex projects where generating a full backlog in a single pass would hit 
 1. **Phase 1 (The Architect):** Analyzes the request and "locks in" a plan by identifying 6 distinct functional groups (e.g., Auth, API, Database).
 2. **Phase 2 (The Builders):** Iteratively expands each group in separate agent loops, writing safe "partial" task files to avoid context overflow.
 3. **Phase 3 (The Assembly):** A bash-controlled merge step combines all partial files into a guaranteed valid `prd.json`.
-
-**How to run:**
-
-- **OpenCode:** `cd opencode && ./ralph_deep_init.sh`
-- **AMP:** `cd amp && ./ralph_deep_init.sh`
-- **Windsurf:** Run the `/ralph-deep-init` workflow in Chat.
 
 ## 🔄 The Ralph Loop Logic
 

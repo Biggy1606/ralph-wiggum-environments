@@ -1,44 +1,72 @@
-# Ralph Wiggum for Windsurf
+# Windsurf Ralph Environment
 
-This workspace provides a Ralph Wiggum environment for Windsurf/Cascade with skills, workflows, and rules.
+> *"I'm helping!"* — Ralph Wiggum
 
-## Quick Start (Recommended)
+This directory contains the Ralph Wiggum agent preset for **Windsurf/Cascade**.
 
-1. **Initialize**
-   - Run `@ralph-initialize` or ask: "Set up Ralph for my [project type]"
-2. **Develop**
-   - Run `@ralph-cycle` to implement one task at a time
-3. **Large Projects**
-   - Run `@ralph-deep-init` to generate a large, grouped backlog
+## 📁 Structure
 
-Skills auto-invoke when the request matches. See `.windsurf/skills/README.md` for full details.
+```
+windsurf/
+└── .windsurf/
+    ├── rules/
+    │   └── ralph.md           # Ralph rule (manual trigger)
+    └── workflows/
+        ├── ralph-init.md      # Initialize Ralph environment
+        ├── ralph-loop.md      # Execute autonomous loop
+        └── ralph-deep-init.md # Deep init for large projects
+```
 
-## Workflow-Only Mode (Alternative)
+## 🚀 Installation
 
-1. Run `/ralph-init` to create:
-   - `prd.json`
-   - `progress.md`
-   - `.windsurf/rules/tech-stack.md`
-2. Run `/ralph-cycle` (single task) or `/ralph-batch` (multi-cycle)
-3. For deep initialization, run `/ralph-deep-init`
+Copy the `.windsurf/` directory to your project root:
 
-## Core Files (Know These)
+```bash
+cp -r .windsurf/ /path/to/your/project/
+```
 
-- **Backlog:** `prd.json`
-- **Backlog template:** `.windsurf/skills/ralph-initialize/prd-template.json`
-- **Progress log:** `progress.md`
-- **Progress template:** `.windsurf/skills/ralph-initialize/progress-template.md`
-- **Rules/stack:** `.windsurf/rules/tech-stack.md`
-- **Rules/stack template:** `.windsurf/skills/ralph-initialize/tech-stack-template.md`
-- **Agent policy:** `AGENTS.md`
+For global rules, add to:
+```
+~/.codeium/windsurf/memories/global_rules.md
+```
 
-## Where to Look
+> **Note:** Add `.windsurfrules` to `.gitignore` if you don't want rules committed.
 
-- **Skills:** `.windsurf/skills/README.md`
-- **Workflows:** `.windsurf/workflows/`
-- **Rules:** `.windsurf/rules/`
+## 📖 Usage
 
-## Notes
+### Initialize Ralph
 
-- If the tech stack file is missing or outdated, update `.windsurf/rules/tech-stack.md` manually.
-- If you need web access, include `@web` in the request.
+In Cascade Panel (Cmd+L):
+```
+/ralph-init "Build a user authentication system with JWT"
+```
+
+This creates:
+- `RULES.md` - Project context and coding standards
+- `prd.json` - Task breakdown with priorities
+- `progress.log` - Execution history
+
+### Run the Loop
+
+```
+/ralph-loop
+```
+
+Ralph will autonomously cycle through tasks.
+
+### Deep Init (Large Projects)
+
+```
+/ralph-deep-init "Build complete e-commerce platform"
+```
+
+## 🔧 Activation Modes
+
+The Ralph rule uses `trigger: manual` (activated via @ralph mention).
+
+Other options:
+- `always` - Always applied
+- `model_decision` - Model decides based on description
+- `glob: "**/*.ts"` - Applied to files matching pattern
+
+Modify `.windsurf/rules/ralph.md` to customize.
