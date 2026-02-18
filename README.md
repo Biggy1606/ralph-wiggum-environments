@@ -56,4 +56,3 @@ For complex projects where generating a full backlog in a single pass would hit 
 ### yes
 
 Reddit post where I shared this: <https://www.reddit.com/r/windsurf/comments/1q6y2jz/ralph_wiggum_agent_for_windsurf>
-
